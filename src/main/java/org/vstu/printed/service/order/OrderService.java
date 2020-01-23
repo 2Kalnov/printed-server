@@ -29,7 +29,7 @@ public class OrderService {
   private final ReceiveOptionService receiveOptionService;
   private final OrderStatusService orderStatusService;
 
-  public boolean createNewOrder(OrderDataDto orderData) {
+  public boolean createNewOrder(OrderDataDto orderData, int clientId) {
     short orderReceiveOptionId = receiveOptionService.getOptionIdByName(orderData.getReceiveOption());
     System.out.println(orderReceiveOptionId);
     Timestamp createdAt = new Timestamp(orderData.getCreatedAt().getTime());
@@ -39,7 +39,7 @@ public class OrderService {
             orderData.getLocation()[0],
             orderData.getLocation()[1],
             orderData.getRadius(),
-            orderData.getUserId(),
+            clientId,
             orderReceiveOptionId
     );
 

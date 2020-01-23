@@ -3,12 +3,15 @@ package org.vstu.printed.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.vstu.printed.dto.OrderDataDto;
 import org.vstu.printed.dto.OrderUpdatingDataDto;
 import org.vstu.printed.persistence.order.Order;
 import org.vstu.printed.dto.OrderDto;
 import org.vstu.printed.dto.DocumentDto;
+import org.vstu.printed.security.jwt.JwtUser;
 import org.vstu.printed.service.document.DocumentService;
 import org.vstu.printed.service.order.OrderService;
 
@@ -54,7 +57,11 @@ public class OrderController {
 
   @PostMapping("/orders/new")
   public ResponseEntity createOrder(@RequestBody OrderDataDto orderData) {
-    boolean successfulSave = orderService.createNewOrder(orderData);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    JwtUser userInfo = (JwtUser)authentication.getPrincipal();
+    int userId = userInfo.getId();
+
+    boolean successfulSave = orderService.createNewOrder(orderData, userId);
     if(successfulSave)
       return ResponseEntity.status(HttpStatus.CREATED).build();
     else

@@ -12,7 +12,6 @@ public class OrderDataDto {
   private int radius;
 
   private Date createdAt;
-  private int userId;
   private String receiveOption;
 
 }
