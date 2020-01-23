@@ -72,6 +72,10 @@ public class DocumentService {
     return foundDocuments.stream().map(this::mapToDto).collect(Collectors.toList());
   }
 
+  public void deleteDocumentById(int documentId) {
+    repository.deleteByIdNative(documentId);
+  }
+
   private DocumentDto mapToDto(Document document) {
     DocumentDto dto = new DocumentDto();
 

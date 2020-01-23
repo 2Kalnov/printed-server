@@ -8,39 +8,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.vstu.printed.dto.UserDto;
 import org.vstu.printed.dto.UserRegisterDto;
+import org.vstu.printed.dto.UserUpdatingDataDto;
 import org.vstu.printed.persistence.account.Account;
 import org.vstu.printed.persistence.role.Role;
 import org.vstu.printed.persistence.user.User;
 import org.vstu.printed.repository.AccountRepository;
 import org.vstu.printed.repository.RoleRepository;
 import org.vstu.printed.repository.UserRepository;
+import org.vstu.printed.service.account.AccountService;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service("printedUserService")
 @RequiredArgsConstructor
 public class UserService {
-  @Autowired
   private final PasswordEncoder encoder;
 
-  @Autowired
   private final UserRepository repository;
-
-  @Autowired
   private final RoleRepository roleRepository;
+  private final AccountService accountService;
 
-  @Autowired
-  private final AccountRepository accountRepository;
-
-  public ResponseEntity<UserDto> getUserById(int id) {
-    ResponseEntity<UserDto> userDto;
+  public UserDto getUserById(int id) {
+    UserDto userDto;
     Optional<User> user = repository.findByIdNative(id);
-    if(user.isPresent())
-      userDto = ResponseEntity.ok(mapToDto(user.get()));
-    else
-      userDto = ResponseEntity.notFound().build();
-
-    return userDto;
+    return userDto = user.map(this::mapToDto).orElse(null);
   }
 
   public void save(User user) {
@@ -50,12 +42,40 @@ public class UserService {
   public UserDto register(UserRegisterDto userInfo) {
     User user = createUserFromRegisterDto(userInfo);
 
-    Account newUserAccount = accountRepository.save(new Account());
-    user.setAccountNumber(newUserAccount.getNumber());
+    Account newAccount = new Account();
+    newAccount.setCardNumberCut(userInfo.getCardNumberCut());
+    newAccount.setBalance(BigDecimal.ZERO);
+    newAccount.setRememberCard(false);
+
+    Account savedAccount = accountService.saveAccount(newAccount);
+    user.setAccountNumber(savedAccount.getNumber());
 
     User registeredUser = repository.save(user);
 
     return mapToDto(registeredUser);
+  }
+
+  public User findByPhoneNumber(String userInfo) throws UsernameNotFoundException {
+    return repository.findByPhoneNumber(userInfo);
+  }
+
+  public boolean updateUser(UserUpdatingDataDto patchData, int userId) throws Exception {
+    boolean wasUpdated = false;
+
+    String email = patchData.getEmail();
+    String phoneNumber = patchData.getPhoneNumber();
+
+    if(email != null && !email.isEmpty()) {
+      repository.updateEmail(email, userId);
+      wasUpdated = true;
+    }
+
+    if(phoneNumber != null && !phoneNumber.isEmpty()) {
+      repository.updatePhoneNumber(phoneNumber, userId);
+      wasUpdated = true;
+    }
+
+    return wasUpdated;
   }
 
   private User createUserFromRegisterDto(UserRegisterDto userRegisterDto) {
@@ -67,7 +87,8 @@ public class UserService {
 
     user.setPassword(encoder.encode(userRegisterDto.getPassword()));
 
-    Role userRole = roleRepository.findByNameNative(userRegisterDto.getName());
+    Optional<Role> foundUserRole = roleRepository.findByNameNative(userRegisterDto.getRoleName());
+    Role userRole = foundUserRole.orElse(null);
     user.setRole(userRole);
 
     return user;
@@ -83,10 +104,6 @@ public class UserService {
     userDto.setPhoneNumber(user.getPhoneNumber());
 
     return userDto;
-  }
-
-  public User findByPhoneNumber(String userInfo) throws UsernameNotFoundException {
-    return repository.findByPhoneNumber(userInfo);
   }
 
 }

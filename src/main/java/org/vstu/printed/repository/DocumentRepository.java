@@ -38,4 +38,9 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
           "OrdersDocuments join Documents on Documents.Id = OrdersDocuments.DocumentId\n" +
           "where OrdersDocuments.OrderId = :orderId", nativeQuery = true)
   List<Document> getDocumentsByOrderIdNative(@Param("orderId") int orderId);
+
+  @Modifying
+  @Transactional
+  @Query(value = "delete Documents where Id = :documentId", nativeQuery = true)
+  void deleteByIdNative(@Param("documentId") int documentId);
 }

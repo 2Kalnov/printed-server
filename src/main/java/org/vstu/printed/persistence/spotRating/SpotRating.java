@@ -24,8 +24,8 @@ public class SpotRating {
   private final String review;
 
   @Column(name = "SpotId")
-  private final int spotId;
+  private final Integer spotId;
 
   @Column(name = "UserId")
-  private final int userId;
+  private final Integer userId;
 }

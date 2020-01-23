@@ -31,4 +31,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
           @Param("accountId") int accountNumber,
           @Param("roleId") short role,
           @Param("name") String name);
+
+  @Modifying
+  @Transactional
+  @Query(value = "update Users set PhoneNumber = :phoneNumber where Id = :userId", nativeQuery = true)
+  void updatePhoneNumber(@Param("phoneNumber") String phoneNumber, @Param("userId") int userId);
+
+  @Modifying
+  @Transactional
+  @Query(value = "update Users set Email = :email where Id = :userId", nativeQuery = true)
+  void updateEmail(@Param("email") String email, @Param("userId") int userId);
 }

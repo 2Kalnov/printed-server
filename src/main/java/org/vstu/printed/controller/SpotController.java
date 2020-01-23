@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.vstu.printed.dto.SpotAdminDto;
 import org.vstu.printed.dto.SpotCreationDto;
+import org.vstu.printed.dto.SpotUpdatingDataDto;
 import org.vstu.printed.security.jwt.JwtUser;
 import org.vstu.printed.dto.SpotDto;
 import org.vstu.printed.service.spot.SpotNotFoundException;
@@ -18,6 +18,16 @@ import org.vstu.printed.service.spot.SpotService;
 @RequestMapping("/spots")
 public class SpotController {
   private final SpotService spotService;
+
+  @PatchMapping("/{spotId}")
+  public ResponseEntity updateSpot(@PathVariable int spotId, @RequestBody SpotUpdatingDataDto spotData) {
+    try {
+      spotService.updateSpot(spotData, spotId);
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+  }
 
   @PostMapping
   public ResponseEntity addSpot(@RequestBody SpotCreationDto spotDto) {
@@ -35,13 +45,6 @@ public class SpotController {
     int userId = userInfo.getId();
 
     try {
-      /*int adminId = spotService.getAdminIdForSpot(spotId);
-      if(userId == adminId) {
-        SpotDto dto = spotService.getSpot(spotId);
-        return ResponseEntity.ok(dto);
-      }
-      else
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();*/
       SpotDto dto = spotService.getSpot(spotId);
       return ResponseEntity.ok(dto);
     } catch(SpotNotFoundException e) {
@@ -49,10 +52,9 @@ public class SpotController {
     }
   }
 
-  @GetMapping
-  public ResponseEntity<SpotDto> adminSpot(@RequestBody SpotAdminDto spotAdminDto) {
-    int userId = spotAdminDto.getUserId();
-    SpotDto spot = spotService.getAdminSpot(userId);
+  @GetMapping()
+  public ResponseEntity<SpotDto> adminSpot(@RequestParam("adminId") int adminId) {
+    SpotDto spot = spotService.getAdminSpot(adminId);
     if(spot != null)
       return ResponseEntity.ok(spot);
     else

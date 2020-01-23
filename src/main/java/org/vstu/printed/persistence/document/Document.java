@@ -14,7 +14,7 @@ public class Document {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
-  private final int size;
+  private final Integer size;
 
   @Column(name = "File")
   private final byte[] fileData;
@@ -29,10 +29,10 @@ public class Document {
   private final String name;
 
   @Column(name = "PagesCount")
-  private final int pagesCount;
+  private final Integer pagesCount;
 
   @Column(name = "UserId")
-  private final int userId;
+  private final Integer userId;
 
   public Document(byte[] file, int size, String name, String contentType, int pagesCount, int userId) {
     StringBuilder filePathBuilder = new StringBuilder();

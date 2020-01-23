@@ -1,9 +1,11 @@
 package org.vstu.printed.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.vstu.printed.dto.OrderDataDto;
+import org.vstu.printed.dto.OrderUpdatingDataDto;
 import org.vstu.printed.persistence.order.Order;
 import org.vstu.printed.dto.OrderDto;
 import org.vstu.printed.dto.DocumentDto;
@@ -24,13 +26,21 @@ public class OrderController {
   }
 
   @GetMapping("users/{userId}/orders/")
-  public ResponseEntity<List<Order>> userOrders(@PathVariable int userId) {
-    return orderService.getUserOrders(userId);
+  public ResponseEntity<List<OrderDto>> userOrders(@PathVariable int userId) {
+    List<OrderDto> orders = orderService.getUserOrders(userId);
+    if(!orders.isEmpty())
+      return ResponseEntity.ok(orders);
+    else
+      return ResponseEntity.notFound().build();
   }
 
   @GetMapping("users/{userId}/orders/{orderId}")
-  public ResponseEntity<Order> userOrders(@PathVariable int userId, @PathVariable int orderId) {
-    return orderService.getUserOrder(userId, orderId);
+  public ResponseEntity<OrderDto> userOrders(@PathVariable int userId, @PathVariable int orderId) {
+    OrderDto order = orderService.getUserOrder(userId, orderId);
+    if(order != null)
+      return ResponseEntity.ok(order);
+    else
+      return ResponseEntity.notFound().build();
   }
 
   @GetMapping("/orders/{id}/documents")
@@ -43,7 +53,21 @@ public class OrderController {
   }
 
   @PostMapping("/orders/new")
-  public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDataDto orderData) {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity createOrder(@RequestBody OrderDataDto orderData) {
+    boolean successfulSave = orderService.createNewOrder(orderData);
+    if(successfulSave)
+      return ResponseEntity.status(HttpStatus.CREATED).build();
+    else
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+  }
+
+  @PatchMapping("/orders/{orderId}")
+  public ResponseEntity updateOrder(@PathVariable int orderId, @RequestBody OrderUpdatingDataDto patchData) {
+    try {
+      orderService.updateOrder(patchData, orderId);
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
   }
 }

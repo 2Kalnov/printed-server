@@ -51,9 +51,13 @@ public class AuthenticationController {
 
       String token = tokenProvider.createToken(phoneNumber);
 
-      Map<String, String> response = new HashMap<>();
-      response.put("phonenumber", phoneNumber);
+      Map<String, Object> response = new HashMap<>();
+      response.put("phoneNumber", phoneNumber);
       response.put("token", token);
+      response.put("id", user.getId());
+      response.put("name", user.getName());
+      response.put("email", user.getEmail());
+      response.put("accountNumber", user.getAccountNumber());
 
       return ResponseEntity.ok(response);
     } catch(AuthenticationException e) {

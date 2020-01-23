@@ -1,28 +1,20 @@
 package org.vstu.printed.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.vstu.printed.security.jwt.JwtConfigurer;
 import org.vstu.printed.security.jwt.JwtTokenProvider;
 
-import javax.ws.rs.HttpMethod;
+import org.springframework.http.HttpMethod;
 import java.util.Arrays;
 
 @Configuration
@@ -36,6 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   private static final String LOGIN_ENDPOINT = "/login";
+  private static final String SIGNUP_ENDPOINT = "/signup";
 
   @Bean
   @Override
@@ -46,16 +39,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable();
-    http
+    http.requiresChannel()
+      .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+      .requiresSecure()
+      .and()
       .httpBasic().disable()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       .and()
       .authorizeRequests()
+        .antMatchers(HttpMethod.PATCH, "/users/**/account")
+            .hasAnyAuthority("client", "manager")
         .antMatchers(HttpMethod.POST, "/documents")
             .hasAuthority("client")
         .antMatchers(HttpMethod.POST, "/spots")
             .hasAuthority("manager")
-        .antMatchers(org.springframework.http.HttpMethod.PUT, "/spots")
+        .antMatchers(HttpMethod.PATCH, "/spots/*")
             .hasAuthority("manager")
         .antMatchers(HttpMethod.GET, "/documents")
             .authenticated()
@@ -63,9 +61,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .hasAuthority("client")
         .antMatchers(HttpMethod.GET, "/orders")
             .authenticated()
+        .antMatchers(HttpMethod.PATCH, "/orders/*")
+            .hasAnyAuthority("client", "manager")
         .antMatchers(HttpMethod.GET, "/spots")
             .authenticated()
-        .antMatchers("/register")
+        .antMatchers(SIGNUP_ENDPOINT)
             .permitAll()
         .antMatchers("/users")
             .authenticated()

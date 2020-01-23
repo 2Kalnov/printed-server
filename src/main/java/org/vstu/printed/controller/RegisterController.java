@@ -10,10 +10,9 @@ import org.vstu.printed.dto.UserDto;
 import org.vstu.printed.service.user.UserService;
 
 @Controller
-@RequestMapping("/register")
+@RequestMapping("/signup")
 @RequiredArgsConstructor
 public class RegisterController {
-  @Autowired
   private final UserService userService;
 
   @PostMapping

@@ -41,7 +41,7 @@ public class User implements UserDetails {
 
   @NotNull
   @Column(name = "AccountNumber")
-  private int accountNumber;
+  private Integer accountNumber;
 
   @ManyToOne
   @JoinColumn(name = "Role", referencedColumnName = "Id")

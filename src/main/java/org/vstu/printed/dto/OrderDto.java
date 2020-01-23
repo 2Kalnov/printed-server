@@ -13,5 +13,5 @@ public class OrderDto {
   private Date receivedAt;
   private String receiveOption;
   private String status;
-  private String spotAddress;
+  private int spotId;
 }

@@ -21,7 +21,7 @@ public class Printer {
   private final String name;
 
   @Column(name = "SpotId")
-  private final int spotId;
+  private final Integer spotId;
 
   @Column(name = "Colorful")
   private final boolean isColorful;

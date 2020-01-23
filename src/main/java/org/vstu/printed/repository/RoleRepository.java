@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.vstu.printed.persistence.role.Role;
 
-public interface RoleRepository extends JpaRepository<Role, Short> {
+import java.util.Optional;
 
-  @Query(value="select * from Roles where [Name] = :name", nativeQuery = true)
-  Role findByNameNative(@Param("name") String name);
+public interface RoleRepository extends JpaRepository<Role, Short> {
+  @Query(value="select top 1 Id, [Name] from Roles where [Name] = :roleName", nativeQuery = true)
+  Optional<Role> findByNameNative(@Param("roleName") String name);
 }

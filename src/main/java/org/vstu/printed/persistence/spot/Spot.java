@@ -1,12 +1,12 @@
 package org.vstu.printed.persistence.spot;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.vstu.printed.persistence.spotstatus.SpotStatus;
 import org.vstu.printed.persistence.user.User;
 
 @Entity
@@ -21,16 +21,19 @@ public class Spot {
   public final int Id;
 
   @Column(name = "Name")
-  private final String name;
+  private String name;
 
-  @NotNull
   @OneToOne
   @JoinColumn(name = "AdminId", referencedColumnName = "Id")
-  private final User admin;
+  private User admin;
 
   @Column(name = "Location")
-  private final byte[] location;
+  private byte[] location;
 
   @Column(name = "Address")
-  private final String address;
+  private String address;
+
+  @ManyToOne
+  @JoinColumn(name = "StatusId", referencedColumnName = "Id")
+  private SpotStatus status;
 }

@@ -1,9 +1,12 @@
 package org.vstu.printed.persistence.order;
 
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
+import org.vstu.printed.persistence.orderstatus.OrderStatus;
+import org.vstu.printed.persistence.receiveoption.ReceiveOption;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -14,41 +17,41 @@ import javax.persistence.*;
 @Table(name = "Orders")
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
+@Data
 public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private final int id;
 
-  @Column(name="CreatedAt")
+  @Column(name="CreatedAt", nullable = false)
   private final Timestamp createdAt;
 
   @Column(name = "DoneAt")
-  @Nullable
   private Timestamp doneAt;
 
   @Column(name = "ReceivedAt")
-  @Nullable
   private Timestamp receivedAt;
 
-  @Column(name = "Cost")
+  @Column(name = "Cost", nullable = false)
   private final BigDecimal cost;
 
   @Column(name = "Location")
   private final byte[] location;
 
   @Column(name = "Radius")
-  private final int radius;
+  private Integer radius = 0;
 
-  @Column(name = "ReceiveOptionId")
-  private final short receiveOptionId;
+  @ManyToOne
+  @JoinColumn(name = "ReceiveOptionId", referencedColumnName = "Id", nullable = false)
+  private final ReceiveOption receiveOption;
 
-  @Column(name = "StatusId")
-  private short statusId;
+  @ManyToOne
+  @JoinColumn(name = "StatusId", referencedColumnName = "Id")
+  private OrderStatus status;
 
   @Column(name = "UserId")
-  private final int clientId;
+  private final Integer clientId;
 
   @Column(name = "SpotId")
-  private final int spotId;
-
+  private Integer spotId = 0;
 }

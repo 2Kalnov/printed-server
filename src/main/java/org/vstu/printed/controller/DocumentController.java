@@ -61,4 +61,14 @@ public class DocumentController {
     else
       return ResponseEntity.notFound().build();
   }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity deleteById(@PathVariable int id) {
+    try {
+      documentService.deleteDocumentById(id);
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    } catch(Exception e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+  }
 }

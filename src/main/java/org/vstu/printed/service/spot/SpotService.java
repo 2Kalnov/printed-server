@@ -4,24 +4,31 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vstu.printed.dto.SpotCreationDto;
 import org.vstu.printed.dto.SpotDto;
+import org.vstu.printed.dto.SpotUpdatingDataDto;
 import org.vstu.printed.persistence.spot.Spot;
+import org.vstu.printed.persistence.spotstatus.SpotStatus;
 import org.vstu.printed.repository.SpotRepository;
+import org.vstu.printed.repository.SpotStatusRepository;
+import org.vstu.printed.service.spotstatus.SpotStatusService;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class SpotService {
-  private final SpotRepository repository;
+  private final SpotRepository spotRepository;
+  private final SpotStatusService spotStatusService;
 
   public boolean addSpot(SpotCreationDto spotData) {
+    short statusId = spotStatusService.getStatusIdByName(spotData.getStatus());
+
     boolean successfulSave;
-    int rowsInserted = repository.saveNative(
+    int rowsInserted = spotRepository.saveNative(
             spotData.getAdminId(),
             spotData.getLocation()[0],
             spotData.getLocation()[1],
             spotData.getAddress(),
-            spotData.getStatusId()
+            statusId
     );
 
     successfulSave = rowsInserted == 1;
@@ -29,8 +36,26 @@ public class SpotService {
     return successfulSave;
   }
 
+  public void updateSpot(SpotUpdatingDataDto patchData, int spotId) throws Exception {
+    Optional<Spot> foundSpot = spotRepository.findById(spotId);
+    if(foundSpot.isPresent()) {
+      String newAddress = patchData.getAddress();
+      String newStatus = patchData.getStatus();
+      Double[] newLocation = patchData.getLocation();
+
+      if(newAddress != null && newLocation != null)
+        spotRepository.updateLocation(newLocation[0], newLocation[1], newAddress, spotId);
+      else if(newStatus != null)
+        spotRepository.updateStatus(spotStatusService.getStatusIdByName(newStatus), spotId);
+      else
+        throw new Exception("You have provided incorrect spot updating data");
+    }
+    else
+      throw new Exception("Can not update; did not find such spot");
+  }
+
   public int getAdminIdForSpot(int spotId) throws SpotNotFoundException {
-    Optional<Spot> foundSpot = repository.findById(spotId);
+    Optional<Spot> foundSpot = spotRepository.findById(spotId);
     if(foundSpot.isPresent())
       return foundSpot.get().getAdmin().getId();
     else
@@ -38,7 +63,7 @@ public class SpotService {
   }
 
   public SpotDto getSpot(int spotId) throws SpotNotFoundException {
-    Optional<Spot> foundSpot = repository.findById(spotId);
+    Optional<Spot> foundSpot = spotRepository.findById(spotId);
     if(foundSpot.isPresent())
       return foundSpot.map(this::mapToDto).get();
     else
@@ -47,11 +72,8 @@ public class SpotService {
 
   public SpotDto getAdminSpot(int adminId) {
     SpotDto spot;
-    Optional<Spot> foundSpot = repository.findByAdminIdNative(adminId);
-    if(foundSpot.isPresent())
-      spot = mapToDto(foundSpot.get());
-    else
-      spot = null;
+    Optional<Spot> foundSpot = spotRepository.findByAdminIdNative(adminId);
+    spot = foundSpot.map(this::mapToDto).orElse(null);
 
     return spot;
   }
@@ -61,7 +83,8 @@ public class SpotService {
 
     spotDto.setId(spot.getId());
     spotDto.setAddress(spot.getAddress());
-    spotDto.setStatusId((short)1);
+    spotDto.setStatus("active");
+    spotDto.setName(spot.getName());
 
     return spotDto;
   }

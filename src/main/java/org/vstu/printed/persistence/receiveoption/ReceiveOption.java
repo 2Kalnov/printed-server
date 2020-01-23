@@ -1,28 +1,22 @@
-package org.vstu.printed.persistence.role;
+package org.vstu.printed.persistence.receiveoption;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Roles")
+@Table(name = "ReceiveOptions")
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 @Data
-public class Role implements GrantedAuthority {
+public class ReceiveOption {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "Id")
   private final short id;
 
-  @Column(name = "[Name]")
-  private final String name;
-
-  @Override
-  public String getAuthority() {
-    return this.name;
-  }
+  @Column(name = "[Option]")
+  private String option;
 }

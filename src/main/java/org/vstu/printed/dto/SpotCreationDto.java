@@ -7,5 +7,5 @@ public class SpotCreationDto {
   private int adminId;
   private String address;
   private double[] location;
-  private short statusId;
+  private String status;
 }

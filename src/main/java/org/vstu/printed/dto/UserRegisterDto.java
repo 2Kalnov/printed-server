@@ -9,4 +9,5 @@ public class UserRegisterDto {
   private String email;
   private String password;
   private String roleName;
+  private String cardNumberCut;
 }

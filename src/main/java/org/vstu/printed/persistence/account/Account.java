@@ -17,10 +17,10 @@ public class Account {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "Number")
-  private int number;
+  private final int number;
 
   @Column(name = "Balance")
-  private final BigDecimal balance;
+  private BigDecimal balance;
 
   @Column(name = "RememberCard")
   private boolean rememberCard;

@@ -8,5 +8,6 @@ import lombok.Setter;
 public class SpotDto {
   private int id;
   private String address;
-  private short statusId;
+  private String status;
+  private String name;
 }

@@ -8,9 +8,8 @@ import java.util.Date;
 public class OrderDataDto {
   private double cost;
 
-  private double latitude;
-  private double longitude;
-  private double radius;
+  private double[] location;
+  private int radius;
 
   private Date createdAt;
   private int userId;
