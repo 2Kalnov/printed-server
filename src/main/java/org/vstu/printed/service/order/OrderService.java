@@ -87,13 +87,22 @@ public class OrderService {
   private OrderDto mapToDto(Order order) {
     OrderDto orderDto = new OrderDto();
 
+    Date receivedAt = order.getCreatedAt();
+    Date doneAt = order.getDoneAt();
+    Integer spotId = order.getSpotId();
+
+    if(receivedAt != null)
+      orderDto.setReceivedAt(receivedAt);
+    if(doneAt != null)
+      orderDto.setDoneAt(doneAt);
+    if(spotId != null)
+      orderDto.setSpotId(spotId);
+
+    orderDto.setId(order.getId());
     orderDto.setCost(order.getCost().doubleValue());
     orderDto.setCreatedAt(order.getCreatedAt());
-    orderDto.setReceivedAt(order.getReceivedAt());
-    orderDto.setDoneAt(order.getDoneAt());
     orderDto.setReceiveOption(order.getReceiveOption().getOption());
     orderDto.setStatus(order.getStatus().getStatus());
-    orderDto.setSpotId(order.getSpotId());
 
     return orderDto;
   }

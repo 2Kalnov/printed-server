@@ -7,11 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.vstu.printed.persistence.spot.Spot;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SpotRepository extends JpaRepository<Spot, Integer> {
   @Query(value = "select Id, [Name], AdminId, [Location], [Address], [StatusId] from Spots where AdminId = :adminId", nativeQuery = true)
-  Optional<Spot> findByAdminIdNative(@Param("adminId") int adminId);
+  List<Spot> findByAdminIdNative(@Param("adminId") int adminId);
 
   String saveNativeQuery = "insert Spots values(null, :adminId, geography\\:\\:Point(:lat, :long, 4326), :address, :statusId)";
 

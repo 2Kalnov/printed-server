@@ -11,7 +11,9 @@ import org.vstu.printed.repository.SpotRepository;
 import org.vstu.printed.repository.SpotStatusRepository;
 import org.vstu.printed.service.spotstatus.SpotStatusService;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,12 +72,10 @@ public class SpotService {
       throw new SpotNotFoundException("Spot with given id is not found");
   }
 
-  public SpotDto getAdminSpot(int adminId) {
+  public List<SpotDto> getAdminSpots(int adminId) {
     SpotDto spot;
-    Optional<Spot> foundSpot = spotRepository.findByAdminIdNative(adminId);
-    spot = foundSpot.map(this::mapToDto).orElse(null);
-
-    return spot;
+    List<Spot> foundSpots = spotRepository.findByAdminIdNative(adminId);
+    return foundSpots.stream().map(this::mapToDto).collect(Collectors.toList());
   }
 
   private SpotDto mapToDto(Spot spot) {

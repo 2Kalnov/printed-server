@@ -13,6 +13,8 @@ import org.vstu.printed.dto.SpotDto;
 import org.vstu.printed.service.spot.SpotNotFoundException;
 import org.vstu.printed.service.spot.SpotService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/spots")
@@ -53,10 +55,10 @@ public class SpotController {
   }
 
   @GetMapping()
-  public ResponseEntity<SpotDto> adminSpot(@RequestParam("adminId") int adminId) {
-    SpotDto spot = spotService.getAdminSpot(adminId);
-    if(spot != null)
-      return ResponseEntity.ok(spot);
+  public ResponseEntity<List<SpotDto>> adminSpots(@RequestParam("adminId") int adminId) {
+    List<SpotDto> spots = spotService.getAdminSpots(adminId);
+    if(!spots.isEmpty())
+      return ResponseEntity.ok(spots);
     else
       return ResponseEntity.notFound().build();
   }

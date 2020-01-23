@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.vstu.printed.dto.OrderDataDto;
 import org.vstu.printed.dto.OrderUpdatingDataDto;
-import org.vstu.printed.persistence.order.Order;
 import org.vstu.printed.dto.OrderDto;
 import org.vstu.printed.dto.DocumentDto;
 import org.vstu.printed.security.jwt.JwtUser;
@@ -28,7 +27,7 @@ public class OrderController {
     this.documentService = documentService;
   }
 
-  @GetMapping("users/{userId}/orders/")
+  @GetMapping("/users/{userId}/orders")
   public ResponseEntity<List<OrderDto>> userOrders(@PathVariable int userId) {
     List<OrderDto> orders = orderService.getUserOrders(userId);
     if(!orders.isEmpty())
@@ -37,7 +36,7 @@ public class OrderController {
       return ResponseEntity.notFound().build();
   }
 
-  @GetMapping("users/{userId}/orders/{orderId}")
+  @GetMapping("/users/{userId}/orders/{orderId}")
   public ResponseEntity<OrderDto> userOrders(@PathVariable int userId, @PathVariable int orderId) {
     OrderDto order = orderService.getUserOrder(userId, orderId);
     if(order != null)

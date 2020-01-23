@@ -13,11 +13,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-  @Query(value = "select Orders.* from Orders join Users on Orders.UserId = Users.Id where UserId = ?1 and Orders.Id = ?2;", nativeQuery = true)
-  Optional<Order> findUserOrder(int userId, int orderId);
+  @Query(value = "select Orders.Id, Cost, CreatedAt, ReceivedAt, DoneAt, [Location], Radius, ReceiveOptionId, StatusId, SpotId, UserId " +
+          "from Orders join Users on Orders.UserId = Users.Id where UserId = :userId and Orders.Id = :orderId", nativeQuery = true)
+  Optional<Order> findUserOrder(
+          @Param("userId") int userId,
+          @Param("orderId") int orderId
+  );
 
-  @Query(value = "select Orders.* from Orders join Users on Orders.UserId = Users.Id where UserId = ?1", nativeQuery = true)
-  List<Order> findUserOrders(int userId);
+  @Query(value = "select Orders.Id, Cost, CreatedAt, ReceivedAt, DoneAt, [Location], Radius, ReceiveOptionId, StatusId, SpotId, UserId" +
+          " from Orders join Users on Orders.UserId = Users.Id where UserId = :userId", nativeQuery = true)
+  List<Order> findUserOrders(@Param("userId") int userId);
 
   String saveNativeQuery = "insert Orders values(:cost, :createdAt, null, null, Geography\\:\\:Point(:lat, :long, 4326), :radius, :optionId, 1, null, :userId)";
   @Query(value = saveNativeQuery, nativeQuery = true)
