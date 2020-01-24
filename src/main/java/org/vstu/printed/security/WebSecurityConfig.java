@@ -42,14 +42,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable();
-    http.requiresChannel()
+    http
+      .cors()
+      .and()
+      .requiresChannel()
       .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
       .requiresSecure()
       .and()
       .httpBasic().disable()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-      .and()
-        .cors()
       .and()
       .authorizeRequests()
         .antMatchers(HttpMethod.PATCH, "/users/**/account")
@@ -88,9 +89,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(Arrays.asList("*"));
-    configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE"));
+    configuration.setAllowedMethods(Arrays.asList("*"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/login", configuration);
+    source.registerCorsConfiguration("/**", configuration);
     return source;
   }
 
