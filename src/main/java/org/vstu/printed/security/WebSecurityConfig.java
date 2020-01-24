@@ -43,8 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable();
     http
-      .cors()
-      .and()
       .requiresChannel()
       .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
       .requiresSecure()
@@ -82,7 +80,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(LOGIN_ENDPOINT)
             .permitAll()
       .and()
-      .apply(new JwtConfigurer(tokenProvider));
+      .apply(new JwtConfigurer(tokenProvider))
+      .and()
+      .cors();
   }
 
   @Bean()
