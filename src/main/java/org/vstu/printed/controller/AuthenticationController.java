@@ -1,6 +1,7 @@
 package org.vstu.printed.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,6 +24,9 @@ public class AuthenticationController {
   private final AuthenticationManager authenticationManager;
   private final JwtTokenProvider tokenProvider;
   private final UserService userService;
+
+  @Value("${jwt.token.expire}")
+  private long expirationTime;
 
   @Autowired
   public AuthenticationController(
@@ -55,6 +59,7 @@ public class AuthenticationController {
       response.put("name", user.getName());
       response.put("email", user.getEmail());
       response.put("accountNumber", user.getAccountNumber());
+      response.put("expire", expirationTime);
 
       return ResponseEntity.ok(response);
     } catch(AuthenticationException e) {
