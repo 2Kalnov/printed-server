@@ -39,7 +39,7 @@ public class UserService {
     repository.insert(user.getEmail(), encoder.encode(user.getPassword()), user.getPhoneNumber(), user.getAccountNumber(), user.getRole().getId(), user.getName());
   }
 
-  public UserDto register(UserRegisterDto userInfo) {
+  public UserDto register(UserRegisterDto userInfo) throws DuplicateUserException {
     User user = createUserFromRegisterDto(userInfo);
 
     Account newAccount = new Account();
@@ -78,20 +78,29 @@ public class UserService {
     return wasUpdated;
   }
 
-  private User createUserFromRegisterDto(UserRegisterDto userRegisterDto) {
-    User user = new User(
-            userRegisterDto.getName(),
-            userRegisterDto.getEmail(),
-            userRegisterDto.getPhoneNumber()
-    );
+  private User createUserFromRegisterDto(UserRegisterDto userRegisterDto) throws DuplicateUserException {
+    User userWithSamePhoneNumber = repository.findByPhoneNumber(userRegisterDto.getPhoneNumber());
+    User userWithSameEmail = repository.findByEmail(userRegisterDto.getEmail());
 
-    user.setPassword(encoder.encode(userRegisterDto.getPassword()));
+    if(userWithSameEmail == null && userWithSamePhoneNumber == null) {
+      User user = new User(
+              userRegisterDto.getName(),
+              userRegisterDto.getEmail(),
+              userRegisterDto.getPhoneNumber()
+      );
 
-    Optional<Role> foundUserRole = roleRepository.findByNameNative(userRegisterDto.getRoleName());
-    Role userRole = foundUserRole.orElse(null);
-    user.setRole(userRole);
+      user.setPassword(encoder.encode(userRegisterDto.getPassword()));
 
-    return user;
+      Optional<Role> foundUserRole = roleRepository.findByNameNative(userRegisterDto.getRoleName());
+      Role userRole = foundUserRole.orElse(null);
+      user.setRole(userRole);
+
+      return user;
+    }
+    else
+      throw new DuplicateUserException("User with the same phone number or email already exists.");
+
+
   }
 
   private UserDto mapToDto(User user) {

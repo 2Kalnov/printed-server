@@ -62,4 +62,6 @@ public class SpotController {
     else
       return ResponseEntity.notFound().build();
   }
+
+
 }
