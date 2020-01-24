@@ -49,6 +49,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       .httpBasic().disable()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       .and()
+        .cors()
+      .and()
       .authorizeRequests()
         .antMatchers(HttpMethod.PATCH, "/users/**/account")
             .hasAnyAuthority("client", "manager")
@@ -79,21 +81,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(LOGIN_ENDPOINT)
             .permitAll()
       .and()
-            .cors()
-      .and()
       .apply(new JwtConfigurer(tokenProvider));
   }
 
-  @Bean(name = "corsConfigurationSource")
+  @Bean()
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    List<String> allowedOrigins = new ArrayList();
-    allowedOrigins.add("*");
-
-    configuration.setAllowedOrigins(allowedOrigins);
+    configuration.setAllowedOrigins(Arrays.asList("*"));
     configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
+    source.registerCorsConfiguration("/login", configuration);
     return source;
   }
 
