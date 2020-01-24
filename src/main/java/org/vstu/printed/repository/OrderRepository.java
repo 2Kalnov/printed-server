@@ -59,6 +59,12 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
   @Query(value = allPlacedOrdersQuery, nativeQuery = true)
   List<Order> findAllPlaced();
 
+  @Modifying
+  @Transactional
   void deleteById(int orderId);
 
+  @Modifying
+  @Transactional
+  @Query(value = "update Orders set SpotId = null where SpotId = :spotId and StatusId = 3", nativeQuery = true)
+  void unsetSpotForOrdersInWork(@Param("spotId") int spotId);
 }

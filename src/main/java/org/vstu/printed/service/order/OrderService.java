@@ -29,6 +29,10 @@ public class OrderService {
   private final ReceiveOptionService receiveOptionService;
   private final OrderStatusService orderStatusService;
 
+  public void unsetDeletedSpotForOrders(int spotId) {
+    repository.unsetSpotForOrdersInWork(spotId);
+  }
+
   public void deleteOrder(int orderId) {
     repository.deleteById(orderId);
   }

@@ -9,6 +9,7 @@ import org.vstu.printed.persistence.spot.Spot;
 import org.vstu.printed.persistence.spotstatus.SpotStatus;
 import org.vstu.printed.repository.SpotRepository;
 import org.vstu.printed.repository.SpotStatusRepository;
+import org.vstu.printed.service.order.OrderService;
 import org.vstu.printed.service.spotstatus.SpotStatusService;
 
 import java.util.List;
@@ -20,6 +21,17 @@ import java.util.stream.Collectors;
 public class SpotService {
   private final SpotRepository spotRepository;
   private final SpotStatusService spotStatusService;
+  private final OrderService orderService;
+
+  public void deleteSpot(int spotId) throws SpotNotFoundException {
+    Optional<Spot> spot = spotRepository.findById(spotId);
+    if(spot.isPresent()) {
+      orderService.unsetDeletedSpotForOrders(spotId);
+      spotRepository.deleteById(spotId);
+    }
+    else
+      throw new SpotNotFoundException("Can not delete; did not find such spot");
+  }
 
   public boolean addSpot(SpotCreationDto spotData) {
     short statusId = spotStatusService.getStatusIdByName(spotData.getStatus());

@@ -51,4 +51,8 @@ public interface SpotRepository extends JpaRepository<Spot, Integer> {
           @Param("statusId") short statusId,
           @Param("spotId") int spotId
   );
+
+  @Modifying
+  @Transactional
+  void deleteById(int spotId);
 }

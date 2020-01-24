@@ -63,5 +63,13 @@ public class SpotController {
       return ResponseEntity.notFound().build();
   }
 
-
+  @DeleteMapping("/{spotId}")
+  public ResponseEntity deleteSpot(@PathVariable int spotId) {
+    try {
+      spotService.deleteSpot(spotId);
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    } catch(Exception e) {
+      return ResponseEntity.notFound().build();
+    }
+  }
 }
