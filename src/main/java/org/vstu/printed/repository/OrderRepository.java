@@ -55,4 +55,10 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
           @Param("orderId") int orderId
   );
 
+  String allPlacedOrdersQuery = "select Id, Cost, CreatedAt, DoneAt, ReceivedAt, [Location], Radius, ReceiveOptionId, StatusId, SpotId, UserId from Orders where StatusId = 1";
+  @Query(value = allPlacedOrdersQuery, nativeQuery = true)
+  List<Order> findAllPlaced();
+
+  void deleteById(int orderId);
+
 }

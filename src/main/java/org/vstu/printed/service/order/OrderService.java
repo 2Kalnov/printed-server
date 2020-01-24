@@ -29,6 +29,14 @@ public class OrderService {
   private final ReceiveOptionService receiveOptionService;
   private final OrderStatusService orderStatusService;
 
+  public void deleteOrder(int orderId) {
+    repository.deleteById(orderId);
+  }
+
+  public List<OrderDto> allPlacedOrders() {
+    return repository.findAllPlaced().stream().map(this::mapToDto).collect(Collectors.toList());
+  }
+
   public boolean createNewOrder(OrderDataDto orderData, int clientId) {
     short orderReceiveOptionId = receiveOptionService.getOptionIdByName(orderData.getReceiveOption());
     System.out.println(orderReceiveOptionId);
