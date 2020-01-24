@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/login")
-@CrossOrigin(origins="*")
+@CrossOrigin
 public class AuthenticationController {
 
   private final AuthenticationManager authenticationManager;
