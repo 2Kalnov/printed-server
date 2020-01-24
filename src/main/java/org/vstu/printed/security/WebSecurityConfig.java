@@ -15,7 +15,10 @@ import org.vstu.printed.security.jwt.JwtConfigurer;
 import org.vstu.printed.security.jwt.JwtTokenProvider;
 
 import org.springframework.http.HttpMethod;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -81,13 +84,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       .apply(new JwtConfigurer(tokenProvider));
   }
 
-  @Bean
+  @Bean(name = "corsConfigurationSource")
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("*"));
+    List<String> allowedOrigins = new ArrayList();
+    allowedOrigins.add("*");
+
+    configuration.setAllowedOrigins(allowedOrigins);
     configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/documents", configuration);
+    source.registerCorsConfiguration("/**", configuration);
     return source;
   }
 
