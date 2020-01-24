@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.csrf().disable();
+    http.cors().and().csrf().disable();
     http
       .requiresChannel()
       .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
@@ -80,18 +80,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(LOGIN_ENDPOINT)
             .permitAll()
       .and()
-      .apply(new JwtConfigurer(tokenProvider))
-      .and()
-      .cors();
+      .apply(new JwtConfigurer(tokenProvider));
   }
 
-  @Bean()
+  @Bean
   CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("*"));
-    configuration.setAllowedMethods(Arrays.asList("*"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
+    source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
     return source;
   }
 
