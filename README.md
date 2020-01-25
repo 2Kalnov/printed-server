@@ -85,7 +85,102 @@
             ]
             ```
         - 404: пользователь не найден
-    
+
+### Orders
+
+1. #### Получение всех заказов пользователя
+    - request type: GET
+    - url: `/users/{userId}/orders/`
+    - path variable:
+        - `userId` - ID пользователя
+    - response
+        - 200:
+            ```json
+            [
+                {
+                    "id": "ID документа",
+                    "createdAt": "дата создания заказа",
+                    "doneAt": "дата выполнения заказа",
+                    "receivedAt": "дата получения заказа клиентом",
+                    "cost": "цена",
+                    "location": "",
+                    "radius": "", // int
+                    "receiveOptionId": "",
+                    "statusId": "",
+                    "clientId": "",
+                    "spotId": ""
+                },
+                ...
+            ]
+            
+            ```
+
+2. #### Получение конкретного заказа пользователя
+    - request type: GET
+    - url: `/users/{userId}/orders/{orderId}`
+    - path variable:
+        - `userId` - ID пользователя
+        - `orderId` - ID заказа
+    - response
+        - 200:
+            ```json
+                {
+                    "id": "ID документа",
+                    "createdAt": "дата создания заказа",
+                    "doneAt": "дата выполнения заказа",
+                    "receivedAt": "дата получения заказа клиентом",
+                    "cost": "цена",
+                    "location": "",
+                    "radius": "", // int
+                    "receiveOptionId": "",
+                    "statusId": "",
+                    "clientId": "",
+                    "spotId": ""
+                }
+            ```
+
+3. #### Получение документов из заказа
+    - request type: GET
+    - url: `/orders/{orderId}/documents`
+    - path variable:
+        - `orderId` - ID заказа
+    - response
+        - 200:
+            ```json
+             [
+                {
+                    "id": "id документа", // int
+                    "size": "размер документа в байтах", // int
+                    "name": "название документа",
+                    "userId": "id пользователя, которому принадлежит файл", // int
+                    "pagesCount": "количество страниц в документе" // int
+                },
+                ...
+             ]
+            ```
+4. #### Оформление нового заказа
+    - request type: GET
+    - url: `/orders/{orderId}/documents`
+    - path variable:
+        - `orderId` - ID заказа
+    - body:
+        ```json
+             {
+                    "createdAt": "дата создания заказа",
+                    "doneAt": "дата выполнения заказа",
+                    "receivedAt": "дата получения заказа клиентом",
+                    "cost": "цена",
+                    "latitude": "",
+                    "longitude": "",
+                    "radius": "", // int
+                    "receiveOption": "",
+                    "status": "",
+                    "userId": "",
+            }
+        ```
+    - response
+        - 404
+            
 5. #### Получение информации о точке печати 
     - request type: GET
     - url: `/spots`
@@ -111,7 +206,7 @@
         - 200:
             ```json
             {
-
+            
             }
             ```
         - 404: не найдены заказы, оставленные заданным пользователем и находящиеся в работе
