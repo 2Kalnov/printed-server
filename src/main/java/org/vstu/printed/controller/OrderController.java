@@ -10,18 +10,22 @@ import org.vstu.printed.dto.*;
 import org.vstu.printed.security.jwt.JwtUser;
 import org.vstu.printed.service.document.DocumentService;
 import org.vstu.printed.service.order.OrderService;
+import org.vstu.printed.service.spot.SpotNotFoundException;
+import org.vstu.printed.service.spot.SpotService;
 
 import java.util.List;
 
 @RestController
 public class OrderController {
   private final OrderService orderService;
+  private final SpotService spotService;
   private final DocumentService documentService;
 
   @Autowired
-  public OrderController(OrderService orderService, DocumentService documentService) {
+  public OrderController(OrderService orderService, DocumentService documentService, SpotService spotService) {
     this.orderService = orderService;
     this.documentService = documentService;
+    this.spotService = spotService;
   }
 
   @GetMapping("/users/{userId}/orders")
@@ -85,7 +89,20 @@ public class OrderController {
 
   @GetMapping("/spots/{spotId}/orders?status={orderStatus}")
   public ResponseEntity<List<OrderForManagerDto>> getSpotOrdersInWork(@PathVariable int spotId, @RequestParam("orderStatus") String orderStatus) {
-    return ResponseEntity.ok(orderService.getOrdersForSpot(spotId, orderStatus));
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    JwtUser userInfo = (JwtUser)authentication.getPrincipal();
+    int userId = userInfo.getId();
+
+    try {
+      int spotAdminId = spotService.getAdminIdForSpot(spotId);
+      if(spotAdminId == userId)
+        return ResponseEntity.ok(orderService.getOrdersForSpot(spotId, orderStatus));
+      else
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+    } catch(SpotNotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @DeleteMapping("/orders/{orderId}")
