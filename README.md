@@ -197,16 +197,58 @@
             ```
         - 404: не найдена точка печати, администратором которой является пользователь с заданным ID
 
-6. #### Получение информации о заказах, находящихся в работе
+6. #### Получение информации о заказах с определённым статусом на определённой точке печати
     - request type: GET
-    - url: `/orders/{userId}/inwork`
+    - url: `/spots/{spotId}/orders?status=`
     - request parameters:
-        - `userId` - ID пользователя (клиента)
+        - `spotId` - ID точки печати
+        - GET parameters:
+            - status: строковый статус точки печати. Возможные статусы: inwork, ready, received
     - response:
         - 200:
             ```json
-            {
-            
-            }
+                [
+                    {
+                        "id": 1,
+                        "cost": 117.0,
+                        "createdAt": "2019-11-05 07:05:33",
+                        "doneAt": "2019-11-05 07:32:04",
+                        "receivedAt": "2019-11-05 07:05:33",
+                        "receiveOption": "university",
+                        "status": "received",
+                        "clientId": 2
+                    },
+                ]
             ```
-        - 404: не найдены заказы, оставленные заданным пользователем и находящиеся в работе
+        - 404: не найдены заказы с определённым статусом на заданной точке печати
+
+7. #### Получение информации о всех размещённых (не взятых в работу) заказах
+    - request type: GET
+    - url: `/orders/placed`
+    - response:
+        - 200:
+            ```json
+                [
+                    {
+                        "id": 19,
+                        "cost": 15.0,
+                        "createdAt": "2020-01-11 16:15:10",
+                        "doneAt": null,
+                        "receivedAt": "2020-01-11 16:15:10",
+                        "receiveOption": "personal",
+                        "status": "placed",
+                        "spotId": null
+                    },
+                    {
+                        "id": 20,
+                        "cost": 15.0,
+                        "createdAt": "2020-01-11 16:15:10",
+                        "doneAt": null,
+                        "receivedAt": "2020-01-11 16:15:10",
+                        "receiveOption": "personal",
+                        "status": "placed",
+                        "spotId": null
+                    }
+                ]
+            ```
+        - 404: не найдены размещённые заказы
