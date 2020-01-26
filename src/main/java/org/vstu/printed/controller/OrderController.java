@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.vstu.printed.dto.OrderDataDto;
-import org.vstu.printed.dto.OrderUpdatingDataDto;
-import org.vstu.printed.dto.OrderDto;
-import org.vstu.printed.dto.DocumentDto;
+import org.vstu.printed.dto.*;
 import org.vstu.printed.security.jwt.JwtUser;
 import org.vstu.printed.service.document.DocumentService;
 import org.vstu.printed.service.order.OrderService;
@@ -84,6 +81,11 @@ public class OrderController {
       return ResponseEntity.ok(placedOrders);
     else
       return ResponseEntity.notFound().build();
+  }
+
+  @GetMapping("/spots/{spotId}/orders?status={orderStatus}")
+  public ResponseEntity<List<OrderForManagerDto>> getSpotOrdersInWork(@PathVariable int spotId, @RequestParam("orderStatus") String orderStatus) {
+    return ResponseEntity.ok(orderService.getOrdersForSpot(spotId, orderStatus));
   }
 
   @DeleteMapping("/orders/{orderId}")

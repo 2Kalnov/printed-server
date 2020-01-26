@@ -3,10 +3,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.vstu.printed.dto.OrderDataDto;
-import org.vstu.printed.dto.OrderDto;
-import org.vstu.printed.dto.OrderUpdatingDataDto;
-import org.vstu.printed.dto.SpotDto;
+import org.vstu.printed.dto.*;
 import org.vstu.printed.persistence.order.Order;
 import org.vstu.printed.persistence.orderstatus.OrderStatus;
 import org.vstu.printed.repository.OrderRepository;
@@ -96,6 +93,11 @@ public class OrderService {
     return orderData.map(this::mapToDto).orElse(null);
   }
 
+  public List<OrderForManagerDto> getOrdersForSpot(int spotId, String orderStatus) {
+    short ordersStatusId = orderStatusService.getStatusIdByName(orderStatus);
+    return repository.findBySpotIdAndStatusNative(spotId, ordersStatusId);
+  }
+
   private OrderDto mapToDto(Order order) {
     OrderDto orderDto = new OrderDto();
 
@@ -109,6 +111,29 @@ public class OrderService {
       orderDto.setDoneAt(doneAt);
     if(spotId != null)
       orderDto.setSpotId(spotId);
+
+    orderDto.setId(order.getId());
+    orderDto.setCost(order.getCost().doubleValue());
+    orderDto.setCreatedAt(order.getCreatedAt());
+    orderDto.setReceiveOption(order.getReceiveOption().getOption());
+    orderDto.setStatus(order.getStatus().getStatus());
+
+    return orderDto;
+  }
+
+  private OrderForManagerDto mapToManagerDto(Order order) {
+    OrderForManagerDto orderDto = new OrderForManagerDto();
+
+    Date receivedAt = order.getCreatedAt();
+    Date doneAt = order.getDoneAt();
+    Integer spotId = order.getSpotId();
+
+    if(receivedAt != null)
+      orderDto.setReceivedAt(receivedAt);
+    if(doneAt != null)
+      orderDto.setDoneAt(doneAt);
+    if(spotId != null)
+      orderDto.setClientId(order.getClientId());
 
     orderDto.setId(order.getId());
     orderDto.setCost(order.getCost().doubleValue());
