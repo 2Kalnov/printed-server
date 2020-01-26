@@ -12,10 +12,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/users")
 public class UserController {
   private final UserService service;
 
-  @GetMapping(value = "/users/{id}", produces = APPLICATION_JSON_VALUE)
+  @GetMapping("/{id}")
   public ResponseEntity<UserDto> getUser(@PathVariable int id) {
     UserDto user = service.getUserById(id);
     if(user != null)
@@ -24,7 +25,7 @@ public class UserController {
       return ResponseEntity.notFound().build();
   }
 
-  @PatchMapping(value = "/users/{id}", produces = APPLICATION_JSON_VALUE)
+  @PatchMapping("/{id}")
   public ResponseEntity createUser(@RequestBody UserUpdatingDataDto patchData, @PathVariable int id) {
     try {
       boolean wasUpdated = service.updateUser(patchData, id);
@@ -35,5 +36,11 @@ public class UserController {
     } catch(Exception e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity deleteUser(@PathVariable int id) {
+    // При удалении необходимо также вручную удалять счёт пользователя из базы данных
+    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
   }
 }
