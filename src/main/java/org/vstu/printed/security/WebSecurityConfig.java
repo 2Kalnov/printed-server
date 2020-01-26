@@ -51,6 +51,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       .and()
       .authorizeRequests()
+        .antMatchers(HttpMethod.GET, "/spots/*/orders?status=*")
+            .hasAuthority("manager")
         .antMatchers(HttpMethod.PATCH, "/users/**/account")
             .hasAnyAuthority("client", "manager")
         .antMatchers(HttpMethod.POST, "/documents")
