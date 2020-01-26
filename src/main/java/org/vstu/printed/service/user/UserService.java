@@ -39,7 +39,7 @@ public class UserService {
     repository.insert(user.getEmail(), encoder.encode(user.getPassword()), user.getPhoneNumber(), user.getAccountNumber(), user.getRole().getId(), user.getName());
   }
 
-  public UserDto register(UserRegisterDto userInfo) throws DuplicateUserException {
+  public User register(UserRegisterDto userInfo) throws DuplicateUserException {
     User user = createUserFromRegisterDto(userInfo);
 
     Account newAccount = new Account();
@@ -52,7 +52,7 @@ public class UserService {
 
     User registeredUser = repository.save(user);
 
-    return mapToDto(registeredUser);
+    return registeredUser;
   }
 
   public User findByPhoneNumber(String userInfo) throws UsernameNotFoundException {
