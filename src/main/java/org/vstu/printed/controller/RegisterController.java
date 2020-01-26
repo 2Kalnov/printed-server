@@ -27,7 +27,7 @@ public class RegisterController {
     try {
       User user = userService.register(registrationData);
 
-      return ResponseEntity.ok(authService.loginUser(user.getPhoneNumber(), user.getPassword()));
+      return ResponseEntity.ok(authService.loginUser(user.getPhoneNumber(), registrationData.getPassword()));
     } catch(DuplicateUserException e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
