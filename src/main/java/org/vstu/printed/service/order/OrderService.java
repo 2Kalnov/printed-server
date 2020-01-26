@@ -95,7 +95,8 @@ public class OrderService {
 
   public List<OrderForManagerDto> getOrdersForSpot(int spotId, String orderStatus) {
     short ordersStatusId = orderStatusService.getStatusIdByName(orderStatus);
-    return repository.findBySpotIdAndStatusNative(spotId, ordersStatusId);
+    return repository.findBySpotIdAndStatusNative(spotId, ordersStatusId)
+              .stream().map(this::mapToManagerDto).collect(Collectors.toList());
   }
 
   private OrderDto mapToDto(Order order) {

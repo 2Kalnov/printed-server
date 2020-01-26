@@ -87,8 +87,8 @@ public class OrderController {
       return ResponseEntity.notFound().build();
   }
 
-  @GetMapping("/spots/{spotId}/orders?status={orderStatus}")
-  public ResponseEntity<List<OrderForManagerDto>> getSpotOrdersInWork(@PathVariable int spotId, @RequestParam("orderStatus") String orderStatus) {
+  @GetMapping("/spots/{spotId}/orders")
+  public ResponseEntity<List<OrderForManagerDto>> getSpotOrders(@PathVariable int spotId, @RequestParam("status") String orderStatus) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     JwtUser userInfo = (JwtUser)authentication.getPrincipal();
     int userId = userInfo.getId();

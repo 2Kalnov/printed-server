@@ -71,7 +71,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
   @Query(value = "select Id, Cost, CreatedAt, DoneAt, ReceivedAt, [Location], Radius, ReceiveOptionId, StatusId, SpotId, UserId " +
           "from Orders where SpotId = :spotId and StatusId = :statusId", nativeQuery = true)
-  List<OrderForManagerDto> findBySpotIdAndStatusNative(
+  List<Order> findBySpotIdAndStatusNative(
           @Param("spotId") int spotId,
           @Param("statusId") int statusId
   );
