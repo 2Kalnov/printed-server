@@ -326,3 +326,48 @@
     - response
         - 204: удалено успешно
         - 404: точка печати не найдена
+
+### Users
+
+1. #### Получить информацию о пользователе
+    - request type: GET
+    - url: `users/{user_id}`
+    - path variables:
+        `user_id` - id пользователя
+    - response:
+        - 200: 
+            ```json
+            {
+                "Id": "id пользователя", // int
+                "name": "имя пользователя",
+                "email": "email пользователя",
+                "phoneNumber": "номер телефона",
+                "accountNumber": "" // int
+            }
+            ```
+        - 404: пользователь с заданным id не найден
+
+2. #### Обновить информацию о пользователе
+    - request type: PATCH
+    - url: `users/{user_id}`
+    - path variables: 
+        -  `user_id` - id пользователя
+    - body:
+        ```json
+        {
+            "email": "email пользователя",
+            "phoneNumber": "номер телефона"
+        }
+        ```
+    - response:
+        - 204: информация обновлена успешно
+        - 400: ошибка при обновлении
+        - 409: ?
+
+3. #### Удаление пользователя
+    - request type: PATCH
+    - url: `users/{user_id}`
+    - path variables: 
+        -  `user_id` - id пользователя
+    - response: 
+        - 501: ¯\_(ツ)_/¯
