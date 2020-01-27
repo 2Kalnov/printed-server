@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.vstu.printed.dto.AuthenticationResponseDto;
 import org.vstu.printed.persistence.user.User;
 import org.vstu.printed.dto.AuthenticationRequestDto;
 import org.vstu.printed.security.jwt.JwtTokenProvider;
@@ -22,12 +23,12 @@ public class AuthenticationController {
   @PostMapping
   public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
     try {
-      authService.loginUser(
+      AuthenticationResponseDto authData = authService.loginUser(
               requestDto.getPhoneNumber(),
               requestDto.getPassword()
       );
 
-      return ResponseEntity.ok().build();
+      return ResponseEntity.ok(authData);
     } catch(AuthenticationException e) {
       throw new BadCredentialsException("Invalid phone number or password");
     }

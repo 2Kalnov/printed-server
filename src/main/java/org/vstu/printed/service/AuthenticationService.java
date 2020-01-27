@@ -22,7 +22,7 @@ import java.util.Map;
 public class AuthenticationService {
 
   @Value("${jwt.token.expire}")
-  private static long expirationTime;
+  private long expirationTime;
 
   private final AuthenticationManager authenticationManager;
   private final JwtTokenProvider tokenProvider;
