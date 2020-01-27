@@ -21,11 +21,22 @@ import java.util.List;
 public class SpotController {
   private final SpotService spotService;
 
+  private int getUserIdFromAuthToken() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    JwtUser userInfo = (JwtUser)authentication.getPrincipal();
+    return userInfo.getId();
+  }
+
   @PatchMapping("/{spotId}")
   public ResponseEntity updateSpot(@PathVariable int spotId, @RequestBody SpotUpdatingDataDto spotData) {
     try {
-      spotService.updateSpot(spotData, spotId);
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      int spotAdminId = spotService.getAdminIdForSpot(spotId);
+      int userId = getUserIdFromAuthToken();
+      if(spotAdminId == userId) {
+        spotService.updateSpot(spotData, spotId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      }
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
@@ -33,11 +44,7 @@ public class SpotController {
 
   @PostMapping
   public ResponseEntity addSpot(@RequestBody SpotCreationDto spotDto) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    JwtUser userInfo = (JwtUser)authentication.getPrincipal();
-    int adminId = userInfo.getId();
-
-    boolean spotWasCreated = spotService.addSpot(spotDto, adminId);
+    boolean spotWasCreated = spotService.addSpot(spotDto, getUserIdFromAuthToken());
     if(spotWasCreated)
       return ResponseEntity.status(HttpStatus.CREATED).build();
     else
@@ -46,10 +53,6 @@ public class SpotController {
 
   @GetMapping("/{spotId}")
   public ResponseEntity<SpotDto> getSpot(@PathVariable int spotId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    JwtUser userInfo = (JwtUser)authentication.getPrincipal();
-    int userId = userInfo.getId();
-
     try {
       SpotDto dto = spotService.getSpot(spotId);
       return ResponseEntity.ok(dto);
