@@ -4,8 +4,7 @@ import lombok.Data;
 
 @Data
 public class SpotCreationDto {
-  private int adminId;
-  private String address;
-  private double[] location;
-  private String status;
+  private final String address;
+  private final double[] location;
+  private final String status;
 }

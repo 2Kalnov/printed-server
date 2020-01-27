@@ -33,7 +33,11 @@ public class SpotController {
 
   @PostMapping
   public ResponseEntity addSpot(@RequestBody SpotCreationDto spotDto) {
-    boolean spotWasCreated = spotService.addSpot(spotDto);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    JwtUser userInfo = (JwtUser)authentication.getPrincipal();
+    int adminId = userInfo.getId();
+
+    boolean spotWasCreated = spotService.addSpot(spotDto, adminId);
     if(spotWasCreated)
       return ResponseEntity.status(HttpStatus.CREATED).build();
     else

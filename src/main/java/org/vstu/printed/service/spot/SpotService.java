@@ -33,12 +33,12 @@ public class SpotService {
       throw new SpotNotFoundException("Can not delete; did not find such spot");
   }
 
-  public boolean addSpot(SpotCreationDto spotData) {
+  public boolean addSpot(SpotCreationDto spotData, int adminId) {
     short statusId = spotStatusService.getStatusIdByName(spotData.getStatus());
 
     boolean successfulSave;
     int rowsInserted = spotRepository.saveNative(
-            spotData.getAdminId(),
+            adminId,
             spotData.getLocation()[0],
             spotData.getLocation()[1],
             spotData.getAddress(),
