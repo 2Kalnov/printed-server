@@ -371,3 +371,39 @@
         -  `user_id` - id пользователя
     - response: 
         - 501: `¯\_(ツ)_/¯`
+
+### Accounts
+
+1. #### Получение данных об аккаунте
+    - request type: GET
+    - url: `/accounts/{accountId}`
+    - path variables:
+        `accountId` - id аккаунта
+    - response:
+        - 200: 
+            ```json
+            {
+                "balance": "баланс", // Decimal
+                "rememberCard": "?", // bool
+                "cardNumberCut": "?",
+            }
+            ```
+        - 404: аккаунт не найден
+
+2. #### Обновление аккаунта
+    - request type: PATCH
+    - url: `/users/{userId}/account`
+    - path variables:
+        `userId` - id пользователя
+    - body:
+            ```json
+            {
+                "balanceChange": "изменение баланса", // Double
+                "rememberCard": "?", // bool
+                "cardNumberCut": "?",
+            }
+            ```
+    - response:
+        - 204: обновление аккаунта успешно
+        - 403: авторизованный пользователь пытается изменить не свой аккаунт
+        - 409: что-то пошло не так
