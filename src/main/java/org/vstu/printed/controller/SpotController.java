@@ -73,8 +73,14 @@ public class SpotController {
   @DeleteMapping("/{spotId}")
   public ResponseEntity deleteSpot(@PathVariable int spotId) {
     try {
-      spotService.deleteSpot(spotId);
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      int userId = getUserIdFromAuthToken();
+      int spotAdminId = spotService.getAdminIdForSpot(spotId);
+      if(userId == spotAdminId) {
+        spotService.deleteSpot(spotId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      }
+      else
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     } catch(Exception e) {
       return ResponseEntity.notFound().build();
     }
