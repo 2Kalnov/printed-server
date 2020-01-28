@@ -8,8 +8,6 @@ import org.vstu.printed.dto.UserDto;
 import org.vstu.printed.dto.UserUpdatingDataDto;
 import org.vstu.printed.service.user.UserService;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -26,7 +24,7 @@ public class UserController {
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity createUser(@RequestBody UserUpdatingDataDto patchData, @PathVariable int id) {
+  public ResponseEntity updateUser(@RequestBody UserUpdatingDataDto patchData, @PathVariable int id) {
     try {
       boolean wasUpdated = service.updateUser(patchData, id);
       if(wasUpdated)
