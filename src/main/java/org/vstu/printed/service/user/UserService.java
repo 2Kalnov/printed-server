@@ -29,7 +29,6 @@ public class UserService {
   private final UserRepository repository;
   private final RoleRepository roleRepository;
   private final AccountService accountService;
-  private final AuthenticationService authService;
 
   public UserDto getUserById(int id) {
     UserDto userDto;
@@ -61,18 +60,12 @@ public class UserService {
     return repository.findByPhoneNumber(userInfo);
   }
 
-  public String updatePhoneNumber(String phoneNumber, String password, int userId) {
+  public void updatePhoneNumber(String phoneNumber, int userId) {
     repository.updatePhoneNumber(phoneNumber, userId);
-    return authService.authenticateWithToken(phoneNumber, password);
   }
 
   public void updateEmail(String email, int userId) {
     repository.updateEmail(email, userId);
-  }
-
-  public String updateEmailAndPhoneNumber(String phoneNumber, String email, String password, int userId) {
-    updateEmail(email, userId);
-    return updatePhoneNumber(phoneNumber, password, userId);
   }
 
   private User createUserFromRegisterDto(UserRegisterDto userRegisterDto) throws DuplicateUserException {

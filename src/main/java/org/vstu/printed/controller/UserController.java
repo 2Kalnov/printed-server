@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.vstu.printed.dto.UserDto;
 import org.vstu.printed.dto.UserUpdatingDataDto;
+import org.vstu.printed.service.AuthenticationService;
 import org.vstu.printed.service.user.UserService;
 
 @RestController
@@ -13,6 +14,7 @@ import org.vstu.printed.service.user.UserService;
 @RequestMapping("/users")
 public class UserController {
   private final UserService service;
+  private final AuthenticationService authService;
 
   @GetMapping("/{id}")
   public ResponseEntity<UserDto> getUser(@PathVariable int id) {
@@ -31,12 +33,13 @@ public class UserController {
 
     try {
       if(email != null && !email.isEmpty() && phoneNumber != null && !phoneNumber.isEmpty()) {
-        String newAuthToken = service.updateEmailAndPhoneNumber(phoneNumber, email, password, id);
-        return ResponseEntity.ok(newAuthToken);
+        service.updateEmail(email, id);
+        service.updatePhoneNumber(phoneNumber, id);
+        return ResponseEntity.ok(authService.authenticateWithToken(phoneNumber, password));
       }
       else if(phoneNumber != null && !phoneNumber.isEmpty()) {
-        String newAuthToken = service.updatePhoneNumber(phoneNumber, password, id);
-        return ResponseEntity.ok(newAuthToken);
+        service.updatePhoneNumber(phoneNumber, id);
+        return ResponseEntity.ok(authService.authenticateWithToken(phoneNumber, password));
       }
       else if(email != null && !email.isEmpty()) {
         service.updateEmail(email, id);
