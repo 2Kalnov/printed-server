@@ -25,10 +25,23 @@ public class UserController {
 
   @PatchMapping("/{id}")
   public ResponseEntity updateUser(@RequestBody UserUpdatingDataDto patchData, @PathVariable int id) {
+    String phoneNumber = patchData.getPhoneNumber();
+    String password = patchData.getPassword();
+    String email = patchData.getEmail();
+
     try {
-      boolean wasUpdated = service.updateUser(patchData, id);
-      if(wasUpdated)
+      if(email != null && !email.isEmpty() && phoneNumber != null && !phoneNumber.isEmpty()) {
+        String newAuthToken = service.updateEmailAndPhoneNumber(phoneNumber, email, password, id);
+        return ResponseEntity.ok(newAuthToken);
+      }
+      else if(phoneNumber != null && !phoneNumber.isEmpty()) {
+        String newAuthToken = service.updatePhoneNumber(phoneNumber, password, id);
+        return ResponseEntity.ok(newAuthToken);
+      }
+      else if(email != null && !email.isEmpty()) {
+        service.updateEmail(email, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      }
       else
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     } catch(Exception e) {

@@ -15,6 +15,7 @@ import org.vstu.printed.persistence.user.User;
 import org.vstu.printed.repository.AccountRepository;
 import org.vstu.printed.repository.RoleRepository;
 import org.vstu.printed.repository.UserRepository;
+import org.vstu.printed.service.AuthenticationService;
 import org.vstu.printed.service.account.AccountService;
 
 import java.math.BigDecimal;
@@ -28,6 +29,7 @@ public class UserService {
   private final UserRepository repository;
   private final RoleRepository roleRepository;
   private final AccountService accountService;
+  private final AuthenticationService authService;
 
   public UserDto getUserById(int id) {
     UserDto userDto;
@@ -59,23 +61,18 @@ public class UserService {
     return repository.findByPhoneNumber(userInfo);
   }
 
-  public boolean updateUser(UserUpdatingDataDto patchData, int userId) throws Exception {
-    boolean wasUpdated = false;
+  public String updatePhoneNumber(String phoneNumber, String password, int userId) {
+    repository.updatePhoneNumber(phoneNumber, userId);
+    return authService.authenticateWithToken(phoneNumber, password);
+  }
 
-    String email = patchData.getEmail();
-    String phoneNumber = patchData.getPhoneNumber();
+  public void updateEmail(String email, int userId) {
+    repository.updateEmail(email, userId);
+  }
 
-    if(email != null && !email.isEmpty()) {
-      repository.updateEmail(email, userId);
-      wasUpdated = true;
-    }
-
-    if(phoneNumber != null && !phoneNumber.isEmpty()) {
-      repository.updatePhoneNumber(phoneNumber, userId);
-      wasUpdated = true;
-    }
-
-    return wasUpdated;
+  public String updateEmailAndPhoneNumber(String phoneNumber, String email, String password, int userId) {
+    updateEmail(email, userId);
+    return updatePhoneNumber(phoneNumber, password, userId);
   }
 
   private User createUserFromRegisterDto(UserRegisterDto userRegisterDto) throws DuplicateUserException {
