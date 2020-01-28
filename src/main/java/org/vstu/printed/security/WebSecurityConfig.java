@@ -18,6 +18,7 @@ import org.springframework.http.HttpMethod;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -89,14 +90,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   CorsConfigurationSource corsConfigurationSource() {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList(CorsConfiguration.ALL));
-    configuration.setAllowedMethods(
-            Arrays.asList(
-                    HttpMethod.GET.name(),
-                    HttpMethod.POST.name(),
-                    HttpMethod.PATCH.name(),
-                    HttpMethod.DELETE.name())
-    );
+    final List<String> PERMIT_ALL = Collections.unmodifiableList(Collections.singletonList("*"));
+
+    configuration.setAllowedOrigins(PERMIT_ALL);
+    configuration.setAllowedMethods(Collections.unmodifiableList(Arrays.asList(
+            HttpMethod.GET.name(),
+            HttpMethod.PATCH.name(),
+            HttpMethod.POST.name(),
+            HttpMethod.DELETE.name()
+    )));
+    configuration.setAllowedHeaders(PERMIT_ALL);
+
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
