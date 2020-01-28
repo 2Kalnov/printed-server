@@ -64,10 +64,7 @@ public class SpotController {
   @GetMapping()
   public ResponseEntity<List<SpotDto>> adminSpots(@RequestParam("adminId") int adminId) {
     List<SpotDto> spots = spotService.getAdminSpots(adminId);
-    if(!spots.isEmpty())
-      return ResponseEntity.ok(spots);
-    else
-      return ResponseEntity.notFound().build();
+    return ResponseEntity.ok(spots);
   }
 
   @DeleteMapping("/{spotId}")
