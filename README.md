@@ -371,7 +371,7 @@
 
 3. #### Удаление пользователя
     - request type: PATCH
-    - url: `users/{user_id}`
+    - url: `/users/{user_id}`
     - path variables: 
         -  `user_id` - id пользователя
     - response: 
