@@ -336,7 +336,7 @@
 
 1. #### Получить информацию о пользователе
     - request type: GET
-    - url: `users/{user_id}`
+    - url: `/users/{user_id}`
     - path variables:
         `user_id` - id пользователя
     - response:
@@ -354,7 +354,7 @@
 
 2. #### Обновить информацию о пользователе
     - request type: PATCH
-    - url: `users/{user_id}`
+    - url: `/users/{user_id}`
     - path variables: 
         -  `user_id` - id пользователя
     - body:
