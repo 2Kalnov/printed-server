@@ -95,7 +95,7 @@ public class SpotService {
 
     spotDto.setId(spot.getId());
     spotDto.setAddress(spot.getAddress());
-    spotDto.setStatus("active");
+    spotDto.setStatus(spot.getStatus().getStatus());
     spotDto.setName(spot.getName());
 
     return spotDto;
