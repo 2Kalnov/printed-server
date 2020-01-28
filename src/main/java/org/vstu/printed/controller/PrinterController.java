@@ -15,8 +15,8 @@ import java.util.List;
 public class PrinterController {
   private final PrinterService printerService;
 
-  @GetMapping("/printers/spot_{spotId}")
-  public ResponseEntity<List<PrinterDto>> getPrintersForSpot(@PathVariable int spotId) {
+  @GetMapping("/printers")
+  public ResponseEntity<List<PrinterDto>> getPrintersForSpot(@RequestParam("spotId") int spotId) {
     List<PrinterDto> printers = printerService.getPrintersForSpot(spotId);
     if(!printers.isEmpty())
       return ResponseEntity.ok(printers);
@@ -33,7 +33,7 @@ public class PrinterController {
       return ResponseEntity.notFound().build();
   }
 
-  @PostMapping("/printers/spot_{spotId}")
+  @PostMapping("/spots/{spotId}/printers")
   public ResponseEntity addPrinterToSpot(@RequestBody PrinterDto printerInfo, @PathVariable int spotId) {
     boolean isAdded = printerService.addPrinterForSpot(printerInfo, spotId);
     if(isAdded)
