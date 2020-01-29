@@ -223,7 +223,7 @@
                         "cost": 15.0,
                         "createdAt": "2020-01-11 16:15:10",
                         "doneAt": null,
-                        "receivedAt": "2020-01-11 16:15:10",
+                        "receivedAt": null,
                         "receiveOption": "personal",
                         "status": "placed",
                         "spotId": null
@@ -233,7 +233,7 @@
                         "cost": 15.0,
                         "createdAt": "2020-01-11 16:15:10",
                         "doneAt": null,
-                        "receivedAt": "2020-01-11 16:15:10",
+                        "receivedAt": null,
                         "receiveOption": "personal",
                         "status": "placed",
                         "spotId": null
