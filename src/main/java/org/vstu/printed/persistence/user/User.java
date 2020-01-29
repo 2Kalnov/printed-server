@@ -32,7 +32,7 @@ public class User implements UserDetails {
   private final String email;
 
   @NotNull
-  @Column(name = "Password")
+  @Column(name = "Password", nullable = false)
   private String password;
 
   @NotNull
@@ -40,7 +40,7 @@ public class User implements UserDetails {
   private final String phoneNumber;
 
   @NotNull
-  @Column(name = "AccountNumber")
+  @Column(name = "AccountNumber", nullable = false)
   private Integer accountNumber;
 
   @ManyToOne
