@@ -14,9 +14,10 @@ public class Document {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
+  @Column(name = "[Size]")
   private final Integer size;
 
-  @Column(name = "File")
+  @Column(name = "[File]")
   private final byte[] fileData;
 
   @Column(name = "ContentType")
@@ -25,7 +26,7 @@ public class Document {
   @Column(name = "FilePath")
   private final String filePath; // should i have this field if I store the byte[] file itself?
 
-  @Column(name = "Name")
+  @Column(name = "[Name]")
   private final String name;
 
   @Column(name = "PagesCount")
