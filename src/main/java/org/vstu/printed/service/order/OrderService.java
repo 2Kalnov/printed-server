@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.vstu.printed.dto.*;
+import org.vstu.printed.persistence.document.Document;
 import org.vstu.printed.persistence.order.Order;
 import org.vstu.printed.persistence.orderstatus.OrderStatus;
 import org.vstu.printed.repository.OrderRepository;
 import org.vstu.printed.repository.ReceiveOptionRepository;
+import org.vstu.printed.service.document.DocumentService;
 import org.vstu.printed.service.orderstatus.OrderStatusService;
 import org.vstu.printed.service.receiveoption.ReceiveOptionService;
 
@@ -25,6 +27,9 @@ public class OrderService {
   private final OrderRepository repository;
   private final ReceiveOptionService receiveOptionService;
   private final OrderStatusService orderStatusService;
+  private final DocumentService documentService;
+
+  private final static double PAGE_COST = 3.0;
 
   public void unsetDeletedSpotForOrders(int spotId) {
     repository.unsetSpotForOrdersInWork(spotId);
@@ -38,19 +43,41 @@ public class OrderService {
     return repository.findAllPlaced().stream().map(this::mapToDto).collect(Collectors.toList());
   }
 
-  public boolean createNewOrder(OrderDataDto orderData, int clientId) {
+  public int createEmptyOrder(int clientId) {
+    Order newOrder = new Order();
+    OrderStatus status = orderStatusService.getStatusByName("placed");
+
+    newOrder.setClientId(clientId);
+    newOrder.setStatus(status);
+    newOrder.setCreatedAt(new Timestamp(new Date().getTime()));
+
+    return repository.save(newOrder).getId();
+  }
+
+  public boolean placeOrder(OrderDataDto orderData, int clientId, int orderId) {
     short orderReceiveOptionId = receiveOptionService.getOptionIdByName(orderData.getReceiveOption());
-    System.out.println(orderReceiveOptionId);
-    Timestamp createdAt = new Timestamp(orderData.getCreatedAt().getTime());
-    int rowsInserted = repository.saveNative(
-            new BigDecimal(orderData.getCost()),
-            createdAt,
-            orderData.getLocation()[0],
-            orderData.getLocation()[1],
-            orderData.getRadius(),
-            clientId,
-            orderReceiveOptionId
-    );
+    double orderCost = 0.0;
+
+    List<DocumentDto> orderDocuments = documentService.getAllDocumentsFromOrder(orderId);
+    for(DocumentDto document : orderDocuments) {
+      orderCost += document.getPagesCount() * PAGE_COST;
+    }
+
+    BigDecimal cost = new BigDecimal(orderCost);
+
+    Optional<Order> order = repository.findById(orderId);
+
+    int rowsInserted = 0;
+    if(order.isPresent() && order.get().getClientId() == clientId) {
+      rowsInserted = repository.placeOrderNative(
+              cost,
+              orderData.getLocation()[0],
+              orderData.getLocation()[1],
+              orderData.getRadius(),
+              orderReceiveOptionId,
+              orderId
+      );
+    }
 
     return rowsInserted == 1;
   }

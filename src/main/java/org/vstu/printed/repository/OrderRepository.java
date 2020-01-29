@@ -39,6 +39,24 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
           @Param("optionId") short receiveOptionId
   );
 
+  String placeNativeQuery = "update Orders " +
+          "set Cost = :cost, " +
+          "[Location] = Geography\\:\\:Point(:lat, :long, 4326)," +
+          "Radius = :radius, " +
+          "ReceiveOptionId = :optionId " +
+          "where Orders.Id = :orderId";
+  @Query(value = placeNativeQuery, nativeQuery = true)
+  @Transactional
+  @Modifying
+  int placeOrderNative(
+          @Param("cost") BigDecimal cost,
+          @Param("lat") double latitude,
+          @Param("long") double longitude,
+          @Param("radius") int radius,
+          @Param("optionId") short receiveOptionId,
+          @Param("orderId") int orderId
+  );
+
   @Query(value = "update Orders set StatusId = :statusId, ReceivedAt = :receivedAt or :receivedAt is null, DoneAt = :doneAt or :doneAt is null, SpotId = :spotId, Radius = :radius where Id = :orderId", nativeQuery = true)
   @Modifying
   @Transactional

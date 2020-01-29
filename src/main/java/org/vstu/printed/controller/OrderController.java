@@ -21,6 +21,12 @@ public class OrderController {
   private final SpotService spotService;
   private final DocumentService documentService;
 
+  private int getUserIdFromAuthToken() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    JwtUser userInfo = (JwtUser)authentication.getPrincipal();
+    return userInfo.getId();
+  }
+
   @Autowired
   public OrderController(OrderService orderService, DocumentService documentService, SpotService spotService) {
     this.orderService = orderService;
@@ -55,17 +61,22 @@ public class OrderController {
       return ResponseEntity.notFound().build();
   }
 
-  @PostMapping("/orders/new")
-  public ResponseEntity createOrder(@RequestBody OrderDataDto orderData) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    JwtUser userInfo = (JwtUser)authentication.getPrincipal();
-    int userId = userInfo.getId();
-
-    boolean successfulSave = orderService.createNewOrder(orderData, userId);
+  @PutMapping("/orders/{orderId}")
+  public ResponseEntity placeOrder(@PathVariable int orderId, @RequestBody OrderDataDto orderData) {
+    int userId = getUserIdFromAuthToken();
+    boolean successfulSave = orderService.placeOrder(orderData, userId, orderId);
     if(successfulSave)
       return ResponseEntity.status(HttpStatus.CREATED).build();
     else
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+  }
+
+  @PostMapping("/orders/new")
+  public ResponseEntity<Integer> createOrder() {
+    int userId = getUserIdFromAuthToken();
+    int newOrderId = orderService.createEmptyOrder(userId);
+
+    return ResponseEntity.ok(newOrderId);
   }
 
   @PatchMapping("/orders/{orderId}")

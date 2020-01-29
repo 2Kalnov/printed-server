@@ -19,12 +19,13 @@ import javax.persistence.*;
 @RequiredArgsConstructor
 @Data
 public class Order {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private final int id;
 
   @Column(name="CreatedAt", nullable = false)
-  private final Timestamp createdAt;
+  private Timestamp createdAt;
 
   @Column(name = "DoneAt")
   private Timestamp doneAt;
@@ -50,8 +51,18 @@ public class Order {
   private OrderStatus status;
 
   @Column(name = "UserId")
-  private final Integer clientId;
+  private Integer clientId;
 
   @Column(name = "SpotId")
   private Integer spotId = 0;
+
+  public void setClientId(Integer clientId) {
+    if(this.clientId != null)
+      this.clientId = clientId;
+  }
+
+  public void setCreatedAt(Timestamp createdAt) {
+    if(this.createdAt != null)
+      this.createdAt = createdAt;
+  }
 }
