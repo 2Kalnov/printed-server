@@ -21,7 +21,12 @@
         ```json
         {
             "phonenumber" : "номер телефона пользователя",
-            "token" : "токен авторизации пользователя"
+            "token" : "токен авторизации пользователя",
+            "id": "id пользователя",
+            "name": "имя пользователя",
+            "email": "адрес электронной почты пользователя",
+            "accountNumber": "номер счёта пользователя",
+            "expire": "длительность валидности токена в миллисекундах с момента аутентификации"
         }
         ```
 
@@ -218,7 +223,7 @@
                         "cost": 15.0,
                         "createdAt": "2020-01-11 16:15:10",
                         "doneAt": null,
-                        "receivedAt": "2020-01-11 16:15:10",
+                        "receivedAt": null,
                         "receiveOption": "personal",
                         "status": "placed",
                         "spotId": null
@@ -228,7 +233,7 @@
                         "cost": 15.0,
                         "createdAt": "2020-01-11 16:15:10",
                         "doneAt": null,
-                        "receivedAt": "2020-01-11 16:15:10",
+                        "receivedAt": null,
                         "receiveOption": "personal",
                         "status": "placed",
                         "spotId": null
@@ -331,7 +336,7 @@
 
 1. #### Получить информацию о пользователе
     - request type: GET
-    - url: `users/{user_id}`
+    - url: `/users/{user_id}`
     - path variables:
         `user_id` - id пользователя
     - response:
@@ -349,7 +354,7 @@
 
 2. #### Обновить информацию о пользователе
     - request type: PATCH
-    - url: `users/{user_id}`
+    - url: `/users/{user_id}`
     - path variables: 
         -  `user_id` - id пользователя
     - body:
@@ -366,7 +371,7 @@
 
 3. #### Удаление пользователя
     - request type: PATCH
-    - url: `users/{user_id}`
+    - url: `/users/{user_id}`
     - path variables: 
         -  `user_id` - id пользователя
     - response: 
