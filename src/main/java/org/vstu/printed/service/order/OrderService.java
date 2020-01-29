@@ -63,8 +63,6 @@ public class OrderService {
       Integer newSpotId = patchData.getSpotId();
       Integer newRadius = patchData.getRadius();
       OrderStatus newStatus = orderStatusService.getStatusByName(patchData.getStatus());
-      Date newDoneAt = patchData.getDoneAt();
-      Date newReceivedAt = patchData.getReceivedAt();
 
       if(newSpotId != null)
         order.setSpotId(newSpotId);
@@ -72,10 +70,10 @@ public class OrderService {
         order.setRadius(newRadius);
       if(newStatus != null)
         order.setStatus(newStatus);
-      if(newDoneAt != null)
-        order.setDoneAt(new Timestamp(newDoneAt.getTime()));
-      if(newReceivedAt != null)
-        order.setReceivedAt(new Timestamp(newReceivedAt.getTime()));
+      if(newStatus.getStatus().equals("received"))
+        order.setReceivedAt(new Timestamp(new Date().getTime()));
+      if(newStatus.getStatus().equals("ready"))
+        order.setDoneAt(new Timestamp(new Date().getTime()));
 
       repository.save(order);
     }
