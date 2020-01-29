@@ -5,11 +5,14 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.vstu.printed.persistence.document.Document;
 import org.vstu.printed.dto.DocumentDto;
+import org.vstu.printed.security.jwt.JwtUser;
 import org.vstu.printed.service.document.DocumentService;
 import org.springframework.core.io.Resource;
 
@@ -23,10 +26,18 @@ import java.util.List;
 public class DocumentController {
   private final DocumentService documentService;
 
+  private int getUserIdFromAuthToken() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    JwtUser userInfo = (JwtUser)authentication.getPrincipal();
+    return userInfo.getId();
+  }
+
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<DocumentDto> loadDocument(@RequestParam("document") MultipartFile document, @RequestParam("userId") int userId) {
+  public ResponseEntity<DocumentDto> loadDocument(@RequestParam("document") MultipartFile document) {
     try {
+      int userId = getUserIdFromAuthToken();
+
       return ResponseEntity.ok(documentService.storeDocument(document, userId));
     } catch(IOException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
