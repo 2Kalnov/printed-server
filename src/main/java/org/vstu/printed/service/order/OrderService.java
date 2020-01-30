@@ -95,7 +95,7 @@ public class OrderService {
         order.setSpotId(newSpotId);
       if(newRadius != null)
         order.setRadius(newRadius);
-      if(newStatus != null)
+      if(newStatus != null && !newStatus.equals("placed"))
         order.setStatus(newStatus);
       if(newStatus.getStatus().equals("received"))
         order.setReceivedAt(new Timestamp(new Date().getTime()));
