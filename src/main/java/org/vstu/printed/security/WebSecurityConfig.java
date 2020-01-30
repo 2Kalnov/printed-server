@@ -66,6 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .hasAuthority("manager")
         .antMatchers(HttpMethod.PATCH, "/spots/*")
             .hasAuthority("manager")
+        .antMatchers(HttpMethod.GET, "/documents/download/*")
+            .hasAuthority("manager")
         .antMatchers(HttpMethod.GET, "/documents/**")
             .authenticated()
         .antMatchers(HttpMethod.POST, "/orders")
@@ -82,7 +84,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
         .antMatchers("/users")
             .authenticated()
-        .anyRequest().authenticated()
       .and()
       .apply(new JwtConfigurer(tokenProvider));
   }
