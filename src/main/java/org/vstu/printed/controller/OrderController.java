@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.vstu.printed.dto.*;
 import org.vstu.printed.security.jwt.JwtUser;
 import org.vstu.printed.service.document.DocumentService;
+import org.vstu.printed.service.order.IllegalOrderPickUpException;
 import org.vstu.printed.service.order.OrderService;
 import org.vstu.printed.service.spot.SpotNotFoundException;
 import org.vstu.printed.service.spot.SpotService;

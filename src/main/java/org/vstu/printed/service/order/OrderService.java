@@ -82,7 +82,7 @@ public class OrderService {
     return rowsInserted == 1;
   }
 
-  public void updateOrder(OrderUpdatingDataDto patchData, int orderId) throws Exception {
+  public void updateOrder(OrderUpdatingDataDto patchData, int orderId) throws Exception, IllegalOrderPickUpException {
     Optional<Order> foundOrder = repository.findByIdNative(orderId);
     if(foundOrder.isPresent()) {
       Order order = foundOrder.get();
@@ -90,6 +90,9 @@ public class OrderService {
       Integer newSpotId = patchData.getSpotId();
       Integer newRadius = patchData.getRadius();
       OrderStatus newStatus = orderStatusService.getStatusByName(patchData.getStatus());
+
+      if(order.getSpotId() != null && newSpotId != null)
+        throw new IllegalOrderPickUpException("Order is already picked up by another spot");
 
       if(newSpotId != null)
         order.setSpotId(newSpotId);
