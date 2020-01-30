@@ -58,7 +58,7 @@ public class DocumentController {
       return ResponseEntity.ok()
               .contentType(MediaType.asMediaType(MimeType.valueOf(document.getContentType())))
               .header(HttpHeaders.CONTENT_DISPOSITION, contentDispositionBuilder.toString())
-              //.header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION)
+              .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION)
               .body(new ByteArrayResource(document.getFileData(), document.getName()));
     }
 
