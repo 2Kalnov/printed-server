@@ -2,6 +2,7 @@ package org.vstu.printed.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,10 +48,18 @@ public class DocumentController {
   @GetMapping("/download/{id}")
   public ResponseEntity<Resource> downloadFile(@PathVariable int id) {
     Document document = documentService.getDocument(id);
-    if(document != null)
+    if(document != null) {
+      StringBuilder contentDispositionBuilder = new StringBuilder();
+      contentDispositionBuilder.append("attachment; filename=\"");
+      contentDispositionBuilder.append(document.getName());
+      contentDispositionBuilder.append("\"");
+
       return ResponseEntity.ok()
               .contentType(MediaType.asMediaType(MimeType.valueOf(document.getContentType())))
+              .header(HttpHeaders.CONTENT_DISPOSITION, contentDispositionBuilder.toString())
               .body(new ByteArrayResource(document.getFileData(), document.getName()));
+    }
+
     else
       return ResponseEntity.notFound().build();
   }
