@@ -51,7 +51,7 @@ public class DocumentController {
     Document document = documentService.getDocument(id);
     if(document != null) {
       StringBuilder contentDispositionBuilder = new StringBuilder();
-      contentDispositionBuilder.append("\"attachment; filename=*=UTF-8''");
+      contentDispositionBuilder.append("\"attachment; filename*=UTF-8''");
       contentDispositionBuilder.append(StringEscapeUtils.escapeJava(document.getName()));
       contentDispositionBuilder.append("\"");
 
