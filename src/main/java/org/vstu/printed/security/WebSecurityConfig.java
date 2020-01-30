@@ -3,6 +3,7 @@ package org.vstu.printed.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -102,6 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             HttpMethod.DELETE.name()
     )));
     configuration.setAllowedHeaders(PERMIT_ALL);
+    configuration.setExposedHeaders(Arrays.asList(HttpHeaders.CONTENT_DISPOSITION));
 
     source.registerCorsConfiguration("/**", configuration);
     return source;
