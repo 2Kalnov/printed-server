@@ -42,4 +42,6 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
   @Transactional
   @Query(value = "delete Documents where Id = :documentId", nativeQuery = true)
   void deleteByIdNative(@Param("documentId") int documentId);
+
+  Optional<Document> findByNameAndId(String name, int id);
 }

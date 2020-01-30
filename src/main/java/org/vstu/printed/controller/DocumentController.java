@@ -44,9 +44,9 @@ public class DocumentController {
     }
   }
 
-  @GetMapping("/download/{id}")
-  public ResponseEntity<Resource> downloadFile(@PathVariable int id) {
-    Document document = documentService.getDocument(id);
+  @GetMapping("/download/{documentName}")
+  public ResponseEntity<Resource> downloadFile(@PathVariable String documentName, @RequestParam("id") int id) {
+    Document document = documentService.getDocumentData(documentName, id);
     if(document != null)
       return ResponseEntity.ok()
               .contentType(MediaType.asMediaType(MimeType.valueOf(document.getContentType())))

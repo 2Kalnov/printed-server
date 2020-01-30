@@ -53,6 +53,11 @@ public class DocumentService {
     return document.orElse(null);
   }
 
+  public Document getDocumentData(String name, int documentId) {
+    Optional<Document> documentFound = repository.findByNameAndId(name, documentId);
+    return documentFound.orElse(null);
+  }
+
   public DocumentDto getDocumentForUserWithId(int documentId, int userId) {
     Optional<Document> foundDocument = repository.findByIdAndUserIdNative(documentId, userId);
 
