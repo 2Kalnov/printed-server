@@ -101,6 +101,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             HttpMethod.DELETE.name()
     )));
     configuration.setAllowedHeaders(PERMIT_ALL);
+    configuration.setExposedHeaders(Collections.unmodifiableList(Arrays.asList(HttpHeaders.CONTENT_DISPOSITION)));
 
     source.registerCorsConfiguration("/**", configuration);
     return source;

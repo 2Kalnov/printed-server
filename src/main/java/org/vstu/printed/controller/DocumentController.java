@@ -2,10 +2,7 @@ package org.vstu.printed.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.MimeType;
@@ -18,6 +15,7 @@ import org.vstu.printed.service.document.DocumentService;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -50,14 +48,15 @@ public class DocumentController {
   public ResponseEntity<Resource> downloadFile(@PathVariable int id) {
     Document document = documentService.getDocument(id);
     if(document != null) {
-      StringBuilder contentDispositionBuilder = new StringBuilder();
+      /*StringBuilder contentDispositionBuilder = new StringBuilder();
       contentDispositionBuilder.append("\"attachment; filename*=UTF-8''");
       contentDispositionBuilder.append(StringEscapeUtils.escapeJava(document.getName()));
-      contentDispositionBuilder.append("\"");
+      contentDispositionBuilder.append("\"");*/
+      ContentDisposition documentContentDisposition = ContentDisposition.builder("attachment").filename(document.getName(), Charset.forName("utf-8")).build();
 
       return ResponseEntity.ok()
               .contentType(MediaType.asMediaType(MimeType.valueOf(document.getContentType())))
-              .header(HttpHeaders.CONTENT_DISPOSITION, contentDispositionBuilder.toString())
+              .header(HttpHeaders.CONTENT_DISPOSITION, documentContentDisposition.toString())
               .body(new ByteArrayResource(document.getFileData(), document.getName()));
     }
 
