@@ -44,13 +44,13 @@ public class DocumentController {
     }
   }
 
-  @GetMapping("/download/{documentName}")
-  public ResponseEntity<Resource> downloadFile(@PathVariable String documentName, @RequestParam("id") int id) {
-    Document document = documentService.getDocumentData(documentName, id);
+  @GetMapping("/download/{id}")
+  public ResponseEntity<Resource> downloadFile(@PathVariable int id) {
+    Document document = documentService.getDocument(id);
     if(document != null)
       return ResponseEntity.ok()
               .contentType(MediaType.asMediaType(MimeType.valueOf(document.getContentType())))
-              .body(new ByteArrayResource(document.getFileData()));
+              .body(new ByteArrayResource(document.getFileData(), document.getName()));
     else
       return ResponseEntity.notFound().build();
   }
