@@ -19,6 +19,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.List;
+import org.apache.commons.text.StringEscapeUtils;
 
 @RestController
 @CrossOrigin
@@ -50,8 +51,8 @@ public class DocumentController {
     Document document = documentService.getDocument(id);
     if(document != null) {
       StringBuilder contentDispositionBuilder = new StringBuilder();
-      contentDispositionBuilder.append("attachment; filename=\"");
-      contentDispositionBuilder.append(document.getName());
+      contentDispositionBuilder.append("\"attachment; filename=*=UTF-8''");
+      contentDispositionBuilder.append(StringEscapeUtils.escapeJava(document.getName()));
       contentDispositionBuilder.append("\"");
 
       return ResponseEntity.ok()

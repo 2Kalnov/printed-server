@@ -70,6 +70,11 @@
             <artifactId>tika-parsers</artifactId>
             <version>1.22</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.8</version>
+        </dependency>
     </dependencies>
 
     <build>
