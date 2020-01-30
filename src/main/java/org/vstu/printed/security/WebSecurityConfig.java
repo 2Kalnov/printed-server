@@ -67,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.PATCH, "/spots/*")
             .hasAuthority("manager")
         .antMatchers(HttpMethod.GET, "/documents/download/*")
-            .hasAuthority("manager")
+            .permitAll()
         .antMatchers(HttpMethod.GET, "/documents/**")
             .authenticated()
         .antMatchers(HttpMethod.POST, "/orders")
