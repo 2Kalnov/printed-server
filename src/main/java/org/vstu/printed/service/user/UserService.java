@@ -19,7 +19,9 @@ import org.vstu.printed.service.AuthenticationService;
 import org.vstu.printed.service.account.AccountService;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service("printedUserService")
 @RequiredArgsConstructor
@@ -34,6 +36,10 @@ public class UserService {
     UserDto userDto;
     Optional<User> user = repository.findByIdNative(id);
     return userDto = user.map(this::mapToDto).orElse(null);
+  }
+
+  public List<UserDto> getAllUsers() {
+    return repository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
   }
 
   public void save(User user) {
@@ -89,8 +95,6 @@ public class UserService {
     }
     else
       throw new DuplicateUserException("User with the same phone number or email already exists.");
-
-
   }
 
   private UserDto mapToDto(User user) {

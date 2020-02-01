@@ -7,9 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.vstu.printed.persistence.user.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
+  List<User> findAll();
+
   @Query(value = "select * from Users where Users.Id = :userId", nativeQuery = true)
   Optional<User> findByIdNative(@Param("userId") int id);
 

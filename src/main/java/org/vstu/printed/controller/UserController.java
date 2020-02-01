@@ -9,6 +9,8 @@ import org.vstu.printed.dto.UserUpdatingDataDto;
 import org.vstu.printed.service.AuthenticationService;
 import org.vstu.printed.service.user.UserService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -50,6 +52,15 @@ public class UserController {
     } catch(Exception e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
+  }
+
+  @GetMapping
+  public ResponseEntity<List<UserDto>> getAllUsers() {
+    List<UserDto> registeredUsers = service.getAllUsers();
+    if(registeredUsers.size() > 0)
+      return ResponseEntity.ok(registeredUsers);
+    else
+      return ResponseEntity.noContent().build();
   }
 
   @DeleteMapping("/{id}")
