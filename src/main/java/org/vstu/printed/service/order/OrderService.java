@@ -173,6 +173,7 @@ public class OrderService {
     orderDto.setCreatedAt(order.getCreatedAt());
     orderDto.setReceiveOption(order.getReceiveOption().getOption());
     orderDto.setStatus(order.getStatus().getStatus());
+    orderDto.setSpotId(order.getSpotId());
 
     return orderDto;
   }

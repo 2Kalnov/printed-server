@@ -14,4 +14,5 @@ public class OrderForManagerDto {
   private String receiveOption;
   private String status;
   private Integer clientId;
+  private Integer spotId;
 }
