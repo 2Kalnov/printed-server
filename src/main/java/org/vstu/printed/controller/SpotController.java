@@ -61,7 +61,7 @@ public class SpotController {
     }
   }
 
-  @GetMapping()
+  @GetMapping
   public ResponseEntity<List<SpotDto>> adminSpots(@RequestParam("adminId") int adminId) {
     int userId = getUserIdFromAuthToken();
     if(adminId == userId) {
@@ -70,7 +70,15 @@ public class SpotController {
     }
     else
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+  }
 
+  @GetMapping("/all")
+  public ResponseEntity<List<SpotDto>> getAllSpots() {
+    List<SpotDto> spots = spotService.getAllSpots();
+    if(!spots.isEmpty())
+      return ResponseEntity.ok(spots);
+    else
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
   @DeleteMapping("/{spotId}")

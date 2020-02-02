@@ -55,4 +55,6 @@ public interface SpotRepository extends JpaRepository<Spot, Integer> {
   @Modifying
   @Transactional
   void deleteById(int spotId);
+
+  List<Spot> findAll();
 }

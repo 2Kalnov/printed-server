@@ -85,9 +85,12 @@ public class SpotService {
   }
 
   public List<SpotDto> getAdminSpots(int adminId) {
-    SpotDto spot;
     List<Spot> foundSpots = spotRepository.findByAdminIdNative(adminId);
     return foundSpots.stream().map(this::mapToDto).collect(Collectors.toList());
+  }
+
+  public List<SpotDto> getAllSpots() {
+    return spotRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
   }
 
   private SpotDto mapToDto(Spot spot) {
