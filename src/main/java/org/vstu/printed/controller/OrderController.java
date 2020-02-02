@@ -117,6 +117,15 @@ public class OrderController {
     }
   }
 
+  @GetMapping("/orders")
+  public ResponseEntity<List<OrderForManagerDto>> getAllOrders() {
+    List<OrderForManagerDto> orders = orderService.getAllOrders();
+    if(!orders.isEmpty())
+      return ResponseEntity.ok(orders);
+    else
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
   @DeleteMapping("/orders/{orderId}")
   public ResponseEntity deleteOrder(@PathVariable int orderId) {
     try {

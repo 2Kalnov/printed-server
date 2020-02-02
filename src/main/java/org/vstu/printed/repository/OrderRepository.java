@@ -93,4 +93,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
           @Param("spotId") int spotId,
           @Param("statusId") int statusId
   );
+
+  List<Order> findAll();
 }

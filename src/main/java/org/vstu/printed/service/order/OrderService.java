@@ -127,6 +127,10 @@ public class OrderService {
               .stream().map(this::mapToManagerDto).collect(Collectors.toList());
   }
 
+  public List<OrderForManagerDto> getAllOrders() {
+    return repository.findAll().stream().map(this::mapToManagerDto).collect(Collectors.toList());
+  }
+
   private OrderDto mapToDto(Order order) {
     OrderDto orderDto = new OrderDto();
 
