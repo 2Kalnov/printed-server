@@ -76,7 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.PATCH, "/orders/*")
             .hasAnyAuthority("client", "manager")
         .antMatchers(HttpMethod.GET, "/spots")
-            .authenticated()
+            .hasAuthority("admin")
         .antMatchers(SIGNUP_ENDPOINT)
             .permitAll()
         .antMatchers(LOGIN_ENDPOINT)

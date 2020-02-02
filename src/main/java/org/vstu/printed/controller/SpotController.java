@@ -63,8 +63,14 @@ public class SpotController {
 
   @GetMapping()
   public ResponseEntity<List<SpotDto>> adminSpots(@RequestParam("adminId") int adminId) {
-    List<SpotDto> spots = spotService.getAdminSpots(adminId);
-    return ResponseEntity.ok(spots);
+    int userId = getUserIdFromAuthToken();
+    if(adminId == userId) {
+      List<SpotDto> spots = spotService.getAdminSpots(adminId);
+      return ResponseEntity.ok(spots);
+    }
+    else
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
   }
 
   @DeleteMapping("/{spotId}")
