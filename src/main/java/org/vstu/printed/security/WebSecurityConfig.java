@@ -73,10 +73,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .hasAnyAuthority("client", "admin")
         .antMatchers(HttpMethod.PATCH, "/orders/*")
             .hasAnyAuthority("client", "manager", "admin")
+        .antMatchers(HttpMethod.DELETE, "/orders/*")
+            .hasAnyAuthority("client", "admin")
         .antMatchers(HttpMethod.GET, "/spots")
             .hasAnyAuthority("manager", "admin")
         .antMatchers(HttpMethod.GET, "/spots/*")
             .hasAnyAuthority("manager", "client", "admin")
+        .antMatchers(HttpMethod.DELETE, "/spots/*")
+            .hasAnyAuthority("manager", "admin")
         .antMatchers(HttpMethod.GET, "/spots/all")
             .hasAuthority("admin")
         .antMatchers(HttpMethod.GET, "/orders")
@@ -87,6 +91,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
         .antMatchers(HttpMethod.GET, "/users")
             .hasAuthority("admin")
+        .antMatchers(HttpMethod.DELETE, "/users/*")
+            .authenticated()
       .and()
       .apply(new JwtConfigurer(tokenProvider));
   }
