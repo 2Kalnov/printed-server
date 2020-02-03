@@ -12,6 +12,7 @@ import org.vstu.printed.repository.SpotStatusRepository;
 import org.vstu.printed.service.order.OrderService;
 import org.vstu.printed.service.spotstatus.SpotStatusService;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class SpotService {
   private final SpotStatusService spotStatusService;
   private final OrderService orderService;
 
-  public void deleteSpot(int spotId) throws SpotNotFoundException {
+  public void deleteSpot(int spotId) throws SpotNotFoundException, SQLException {
     Optional<Spot> spot = spotRepository.findById(spotId);
     if(spot.isPresent()) {
       orderService.unsetDeletedSpotForOrders(spotId);

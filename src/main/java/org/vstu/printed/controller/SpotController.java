@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.vstu.printed.dto.SpotCreationDto;
@@ -13,7 +14,9 @@ import org.vstu.printed.dto.SpotDto;
 import org.vstu.printed.service.spot.SpotNotFoundException;
 import org.vstu.printed.service.spot.SpotService;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +28,12 @@ public class SpotController {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     JwtUser userInfo = (JwtUser)authentication.getPrincipal();
     return userInfo.getId();
+  }
+
+  private List<String> getUserRolesFromToken() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    JwtUser userInfo = (JwtUser)authentication.getPrincipal();
+    return userInfo.getAuthorities().stream().map(GrantedAuthority::toString).collect(Collectors.toList());
   }
 
   @PatchMapping("/{spotId}")
@@ -85,14 +94,20 @@ public class SpotController {
   public ResponseEntity deleteSpot(@PathVariable int spotId) {
     try {
       int userId = getUserIdFromAuthToken();
+      List<String> userRoles = getUserRolesFromToken();
+      boolean isAdmin = userRoles.get(0).equals("admin");
+
       int spotAdminId = spotService.getAdminIdForSpot(spotId);
-      if(userId == spotAdminId) {
+
+      if(userId == spotAdminId || isAdmin) {
         spotService.deleteSpot(spotId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
       }
       else
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    } catch(Exception e) {
+    } catch(SQLException e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    } catch(SpotNotFoundException e) {
       return ResponseEntity.notFound().build();
     }
   }
