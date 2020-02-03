@@ -132,7 +132,7 @@ public class OrderController {
       orderService.deleteOrder(orderId);
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     } catch(Exception e) {
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
   }
 }

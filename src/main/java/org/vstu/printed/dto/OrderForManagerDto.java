@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 public class OrderForManagerDto {
   private int id;
-  private double cost;
+  private Double cost;
   private Date createdAt;
   private Date doneAt;
   private Date receivedAt;
@@ -15,4 +15,5 @@ public class OrderForManagerDto {
   private String status;
   private Integer clientId;
   private Integer spotId;
+  private Integer radius;
 }

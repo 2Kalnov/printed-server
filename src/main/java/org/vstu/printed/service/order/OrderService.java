@@ -160,6 +160,7 @@ public class OrderService {
     Date receivedAt = order.getCreatedAt();
     Date doneAt = order.getDoneAt();
     Integer spotId = order.getSpotId();
+    Integer radius = order.getRadius();
 
     if(receivedAt != null)
       orderDto.setReceivedAt(receivedAt);
@@ -167,6 +168,8 @@ public class OrderService {
       orderDto.setDoneAt(doneAt);
     if(spotId != null)
       orderDto.setClientId(order.getClientId());
+    if(radius != null)
+      orderDto.setRadius(radius);
 
     orderDto.setId(order.getId());
     orderDto.setCost(order.getCost().doubleValue());
