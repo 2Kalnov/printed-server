@@ -7,6 +7,7 @@ import org.vstu.printed.dto.*;
 import org.vstu.printed.persistence.document.Document;
 import org.vstu.printed.persistence.order.Order;
 import org.vstu.printed.persistence.orderstatus.OrderStatus;
+import org.vstu.printed.persistence.receiveoption.ReceiveOption;
 import org.vstu.printed.repository.OrderRepository;
 import org.vstu.printed.repository.ReceiveOptionRepository;
 import org.vstu.printed.service.document.DocumentService;
@@ -46,10 +47,12 @@ public class OrderService {
   public int createEmptyOrder(int clientId) {
     Order newOrder = new Order();
     OrderStatus status = orderStatusService.getStatusByName("placed");
+    ReceiveOption defaultOption = receiveOptionService.getOptionByName("university");
 
     newOrder.setClientId(clientId);
     newOrder.setStatus(status);
     newOrder.setCreatedAt(new Timestamp(new Date().getTime()));
+    newOrder.setReceiveOption(defaultOption);
 
     return repository.save(newOrder).getId();
   }

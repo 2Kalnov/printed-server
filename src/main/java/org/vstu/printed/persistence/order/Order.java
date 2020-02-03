@@ -1,10 +1,8 @@
 package org.vstu.printed.persistence.order;
 
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.vstu.printed.persistence.orderstatus.OrderStatus;
 import org.vstu.printed.persistence.receiveoption.ReceiveOption;
 
@@ -34,17 +32,17 @@ public class Order {
   private Timestamp receivedAt;
 
   @Column(name = "Cost", nullable = false)
-  private final BigDecimal cost;
+  private BigDecimal cost = BigDecimal.ZERO;
 
   @Column(name = "Location")
   private final byte[] location;
 
   @Column(name = "Radius")
-  private Integer radius = 0;
+  private Integer radius = 50;
 
   @ManyToOne
   @JoinColumn(name = "ReceiveOptionId", referencedColumnName = "Id", nullable = false)
-  private final ReceiveOption receiveOption;
+  private ReceiveOption receiveOption;
 
   @ManyToOne
   @JoinColumn(name = "StatusId", referencedColumnName = "Id")
@@ -54,15 +52,20 @@ public class Order {
   private Integer clientId;
 
   @Column(name = "SpotId")
-  private Integer spotId = 0;
+  private Integer spotId = null;
+
+  public void setCost(BigDecimal cost) {
+    if(this.cost.equals(BigDecimal.ZERO))
+      this.cost = cost;
+  }
 
   public void setClientId(Integer clientId) {
-    if(this.clientId != null)
+    if(this.clientId == null)
       this.clientId = clientId;
   }
 
   public void setCreatedAt(Timestamp createdAt) {
-    if(this.createdAt != null)
+    if(this.createdAt == null)
       this.createdAt = createdAt;
   }
 }

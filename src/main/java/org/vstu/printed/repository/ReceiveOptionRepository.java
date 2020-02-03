@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface ReceiveOptionRepository extends JpaRepository<ReceiveOption, Short> {
   @Query(value = "select Id, [Option] from ReceiveOptions where [Option] = :optionName", nativeQuery = true)
   Optional<ReceiveOption> findByOptionNative(String optionName);
+
+  Optional<ReceiveOption> findByOption(String optionName);
 }

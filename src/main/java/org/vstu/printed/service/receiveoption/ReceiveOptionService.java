@@ -16,4 +16,9 @@ public class ReceiveOptionService {
     Optional<ReceiveOption> receiveOption = repository.findByOptionNative(optionName);
     return receiveOption.map(ReceiveOption::getId).orElse((short)0);
   }
+
+  public ReceiveOption getOptionByName(String optionName) {
+    Optional<ReceiveOption> option = repository.findByOption(optionName);
+    return option.orElse(null);
+  }
 }
