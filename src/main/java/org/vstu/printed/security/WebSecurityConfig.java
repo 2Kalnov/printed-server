@@ -112,7 +112,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             HttpMethod.GET.name(),
             HttpMethod.PATCH.name(),
             HttpMethod.POST.name(),
-            HttpMethod.DELETE.name()
+            HttpMethod.DELETE.name(),
+            HttpMethod.PUT.name()
     )));
     configuration.setAllowedHeaders(PERMIT_ALL);
     configuration.setExposedHeaders(Collections.unmodifiableList(Arrays.asList(HttpHeaders.CONTENT_DISPOSITION)));
