@@ -13,7 +13,9 @@ public class OrderStatusService {
   private final OrderStatusRepository repository;
 
   public Short getStatusIdByName(String statusName) {
-    Optional<OrderStatus> orderStatus = repository.findByStatus(statusName);
+    System.out.println("Status in 'getStatusIdByName': " + statusName);
+
+    Optional<OrderStatus> orderStatus = repository.findByStatusNative(statusName);
     return orderStatus.map(OrderStatus::getId).orElse(null);
   }
 

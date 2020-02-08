@@ -3,6 +3,7 @@ package org.vstu.printed.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,9 @@ public class OrderController {
   }
 
   @GetMapping("/users/{userId}/orders")
+  @PreAuthorize("#userId == authentication.principal.getId()")
   public ResponseEntity<List<OrderDto>> userOrders(@PathVariable int userId, @RequestParam("status") String orderStatus) {
+    System.out.println("Order status in GET-parameter: " + orderStatus);
     List<OrderDto> orders = orderService.getUserOrders(userId, orderStatus);
     if(!orders.isEmpty())
       return ResponseEntity.ok(orders);
