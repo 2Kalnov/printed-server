@@ -114,8 +114,10 @@ public class OrderService {
       throw new Exception("Can not update; did not find such order");
   }
 
-  public List<OrderDto> getUserOrders(int userId) {
-    List<Order> userOrders = repository.findUserOrders(userId);
+  public List<OrderDto> getUserOrders(int userId, String status) {
+    Short statusId = orderStatusService.getStatusIdByName(status);
+
+    List<Order> userOrders = repository.findUserOrders(userId, statusId);
     return userOrders.stream().map(this::mapToDto).collect(Collectors.toList());
   }
 

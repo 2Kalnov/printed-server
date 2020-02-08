@@ -36,8 +36,8 @@ public class OrderController {
   }
 
   @GetMapping("/users/{userId}/orders")
-  public ResponseEntity<List<OrderDto>> userOrders(@PathVariable int userId) {
-    List<OrderDto> orders = orderService.getUserOrders(userId);
+  public ResponseEntity<List<OrderDto>> userOrders(@PathVariable int userId, @RequestParam("status") String orderStatus) {
+    List<OrderDto> orders = orderService.getUserOrders(userId, orderStatus);
     if(!orders.isEmpty())
       return ResponseEntity.ok(orders);
     else

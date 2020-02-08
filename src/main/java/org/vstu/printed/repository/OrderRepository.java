@@ -22,8 +22,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
   );
 
   @Query(value = "select Orders.Id, Cost, CreatedAt, ReceivedAt, DoneAt, [Location], Radius, ReceiveOptionId, StatusId, SpotId, UserId" +
-          " from Orders join Users on Orders.UserId = Users.Id where UserId = :userId", nativeQuery = true)
-  List<Order> findUserOrders(@Param("userId") int userId);
+          " from Orders join Users on Orders.UserId = Users.Id where UserId = :userId and StatusId = :statusId", nativeQuery = true)
+  List<Order> findUserOrders(@Param("userId") int userId, @Param("statusId") short statusId);
 
   String saveNativeQuery = "insert Orders values(:cost, :createdAt, null, null, Geography\\:\\:Point(:lat, :long, 4326), :radius, :optionId, 1, null, :userId)";
   @Query(value = saveNativeQuery, nativeQuery = true)
