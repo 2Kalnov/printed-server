@@ -40,10 +40,7 @@ public class OrderController {
   public ResponseEntity<List<OrderDto>> userOrders(@PathVariable int userId, @RequestParam("status") String orderStatus) {
     System.out.println("Order status in GET-parameter: " + orderStatus);
     List<OrderDto> orders = orderService.getUserOrders(userId, orderStatus);
-    if(!orders.isEmpty())
-      return ResponseEntity.ok(orders);
-    else
-      return ResponseEntity.notFound().build();
+    return ResponseEntity.ok(orders);
   }
 
   @GetMapping("/users/{userId}/orders/{orderId}")
