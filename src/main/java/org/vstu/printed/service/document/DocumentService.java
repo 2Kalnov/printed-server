@@ -1,5 +1,6 @@
 package org.vstu.printed.service.document;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.vstu.printed.dto.DocumentDto;
 import org.vstu.printed.persistence.document.Document;
+import org.vstu.printed.persistence.ordersdocuments.OrdersDocuments;
 import org.vstu.printed.repository.DocumentRepository;
+import org.vstu.printed.repository.OrdersDocumentsRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,15 +22,17 @@ import java.util.stream.Collectors;
 public class DocumentService {
 
   private final DocumentRepository repository;
+  private final OrdersDocumentsRepository ordersDocumentsRepository;
   private final Tika tikaParser;
 
   @Autowired
-  public DocumentService(Tika parser, DocumentRepository repository) {
+  public DocumentService(Tika parser, DocumentRepository repository, OrdersDocumentsRepository ordersDocumentsRepository) {
     this.repository = repository;
     this.tikaParser = parser;
+    this.ordersDocumentsRepository = ordersDocumentsRepository;
   }
 
-  public DocumentDto storeDocument(MultipartFile documentFile, int userId) throws IOException {
+  public DocumentDto storeDocument(MultipartFile documentFile, int userId, int orderId) throws IOException {
     InputStream fileStream = documentFile.getInputStream();
     Metadata documentInfo = new Metadata();
     tikaParser.parse(fileStream, documentInfo);
@@ -43,7 +48,9 @@ public class DocumentService {
     filePathBuilder.append('/');
     filePathBuilder.append(filename);
 
-    repository.insert(userId, filePathBuilder.toString(), filename, size, pagesCount, file, contentType);
+    //repository.insert(userId, filePathBuilder.toString(), filename, size, pagesCount, file, contentType);
+    Document insertedDocument = repository.save(document);
+    OrdersDocuments documentOrderData = new OrdersDocuments(orderId, insertedDocument.getId());
 
     return mapToDto(document);
   }

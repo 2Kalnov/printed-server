@@ -34,11 +34,11 @@ public class DocumentController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<DocumentDto> loadDocument(@RequestParam("document") MultipartFile document) {
+  public ResponseEntity<DocumentDto> loadDocument(@RequestParam("document") MultipartFile document, @RequestParam("orderId") int orderId) {
     try {
       int userId = getUserIdFromAuthToken();
 
-      return ResponseEntity.ok(documentService.storeDocument(document, userId));
+      return ResponseEntity.ok(documentService.storeDocument(document, userId, orderId));
     } catch(IOException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
