@@ -50,6 +50,7 @@ public class DocumentService {
 
     //repository.insert(userId, filePathBuilder.toString(), filename, size, pagesCount, file, contentType);
     Document insertedDocument = repository.save(document);
+    System.out.println("Inserted document id: " + insertedDocument.getId());
     OrdersDocuments documentOrderData = new OrdersDocuments(orderId, insertedDocument.getId());
 
     return mapToDto(document);
