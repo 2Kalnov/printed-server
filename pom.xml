@@ -75,6 +75,22 @@
             <artifactId>commons-text</artifactId>
             <version>1.8</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/ru.dezhik/sms-sender -->
+        <dependency>
+            <groupId>ru.dezhik</groupId>
+            <artifactId>sms-sender</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.3.3</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
