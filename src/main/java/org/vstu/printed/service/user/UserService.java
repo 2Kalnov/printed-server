@@ -1,22 +1,19 @@
 package org.vstu.printed.service.user;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.vstu.printed.dto.UserDto;
-import org.vstu.printed.dto.UserRegisterDto;
-import org.vstu.printed.dto.UserUpdatingDataDto;
+import org.vstu.printed.dto.signup.UserRegisterDto;
 import org.vstu.printed.persistence.account.Account;
 import org.vstu.printed.persistence.role.Role;
 import org.vstu.printed.persistence.user.User;
-import org.vstu.printed.repository.AccountRepository;
 import org.vstu.printed.repository.RoleRepository;
 import org.vstu.printed.repository.UserRepository;
-import org.vstu.printed.service.AuthenticationService;
 import org.vstu.printed.service.account.AccountService;
+import org.vstu.printed.service.user.verify.PhoneNumberAlreadyVerified;
+import org.vstu.printed.service.user.verify.VerificationCodeService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,6 +28,7 @@ public class UserService {
   private final UserRepository repository;
   private final RoleRepository roleRepository;
   private final AccountService accountService;
+  private final VerificationCodeService verificationCodeService;
 
   public UserDto getUserById(int id) {
     UserDto userDto;
@@ -46,7 +44,7 @@ public class UserService {
     repository.insert(user.getEmail(), encoder.encode(user.getPassword()), user.getPhoneNumber(), user.getAccountNumber(), user.getRole().getId(), user.getName());
   }
 
-  public User register(UserRegisterDto userInfo) throws DuplicateUserException {
+  public User register(UserRegisterDto userInfo) throws DuplicateUserException, PhoneNumberAlreadyVerified {
     User user = createUserFromRegisterDto(userInfo);
 
     Account newAccount = new Account();
@@ -56,6 +54,10 @@ public class UserService {
 
     Account savedAccount = accountService.saveAccount(newAccount);
     user.setAccountNumber(savedAccount.getNumber());
+
+    // Генерация кода подтверждения аккаунта
+
+    verificationCodeService.addCodeForNumber(userInfo.getPhoneNumber());
 
     User registeredUser = repository.save(user);
 
