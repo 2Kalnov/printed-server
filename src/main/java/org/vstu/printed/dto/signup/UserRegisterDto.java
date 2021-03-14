@@ -1,4 +1,4 @@
-package org.vstu.printed.dto;
+package org.vstu.printed.dto.signup;
 
 import lombok.Data;
 
