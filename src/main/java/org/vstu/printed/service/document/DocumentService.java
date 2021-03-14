@@ -48,7 +48,6 @@ public class DocumentService {
     filePathBuilder.append('/');
     filePathBuilder.append(filename);
 
-    //repository.insert(userId, filePathBuilder.toString(), filename, size, pagesCount, file, contentType);
     Document insertedDocument = repository.save(document);
     OrdersDocuments documentOrderData = new OrdersDocuments(orderId, insertedDocument.getId());
     ordersDocumentsRepository.save(documentOrderData);
@@ -77,19 +76,19 @@ public class DocumentService {
 
   public List<DocumentDto> getAllDocumentsForUser(int userId) {
     List<Document> foundDocuments = repository.getDocumentsByUserIdNative(userId);
-    return foundDocuments.stream().map(this::mapToDto).collect(Collectors.toList());
+    return foundDocuments.stream().map(DocumentService::mapToDto).collect(Collectors.toList());
   }
 
   public List<DocumentDto> getAllDocumentsFromOrder(int orderId) {
     List<Document> foundDocuments = repository.getDocumentsByOrderIdNative(orderId);
-    return foundDocuments.stream().map(this::mapToDto).collect(Collectors.toList());
+    return foundDocuments.stream().map(DocumentService::mapToDto).collect(Collectors.toList());
   }
 
   public void deleteDocumentById(int documentId) {
     repository.deleteByIdNative(documentId);
   }
 
-  private DocumentDto mapToDto(Document document) {
+  private static DocumentDto mapToDto(Document document) {
     DocumentDto dto = new DocumentDto();
 
     dto.setId(document.getId());

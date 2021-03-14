@@ -41,7 +41,7 @@ public class OrderService {
   }
 
   public List<OrderDto> allPlacedOrders() {
-    return repository.findAllPlaced().stream().map(this::mapToDto).collect(Collectors.toList());
+    return repository.findAllPlaced().stream().map(OrderService::mapToDto).collect(Collectors.toList());
   }
 
   public int createEmptyOrder(int clientId) {
@@ -118,25 +118,25 @@ public class OrderService {
     Short statusId = orderStatusService.getStatusIdByName(status);
 
     List<Order> userOrders = repository.findUserOrders(userId, statusId);
-    return userOrders.stream().map(this::mapToDto).collect(Collectors.toList());
+    return userOrders.stream().map(OrderService::mapToDto).collect(Collectors.toList());
   }
 
   public OrderDto getUserOrder(int userId, int orderId) {
     Optional<Order> orderData = repository.findUserOrder(userId, orderId);
-    return orderData.map(this::mapToDto).orElse(null);
+    return orderData.map(OrderService::mapToDto).orElse(null);
   }
 
   public List<OrderForManagerDto> getOrdersForSpot(int spotId, String orderStatus) {
     short ordersStatusId = orderStatusService.getStatusIdByName(orderStatus);
     return repository.findBySpotIdAndStatusNative(spotId, ordersStatusId)
-              .stream().map(this::mapToManagerDto).collect(Collectors.toList());
+              .stream().map(OrderService::mapToManagerDto).collect(Collectors.toList());
   }
 
   public List<OrderForManagerDto> getAllOrders() {
-    return repository.findAll().stream().map(this::mapToManagerDto).collect(Collectors.toList());
+    return repository.findAll().stream().map(OrderService::mapToManagerDto).collect(Collectors.toList());
   }
 
-  private OrderDto mapToDto(Order order) {
+  private static OrderDto mapToDto(Order order) {
     OrderDto orderDto = new OrderDto();
 
     Date receivedAt = order.getCreatedAt();
@@ -159,7 +159,7 @@ public class OrderService {
     return orderDto;
   }
 
-  private OrderForManagerDto mapToManagerDto(Order order) {
+  private static OrderForManagerDto mapToManagerDto(Order order) {
     OrderForManagerDto orderDto = new OrderForManagerDto();
 
     Date receivedAt = order.getCreatedAt();
