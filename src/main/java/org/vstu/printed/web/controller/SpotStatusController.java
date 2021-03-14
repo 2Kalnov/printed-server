@@ -1,4 +1,4 @@
-package org.vstu.printed.controller;
+package org.vstu.printed.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

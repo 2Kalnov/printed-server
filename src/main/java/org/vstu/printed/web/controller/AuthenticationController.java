@@ -1,18 +1,13 @@
-package org.vstu.printed.controller;
+package org.vstu.printed.web.controller;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.vstu.printed.dto.AuthenticationResponseDto;
-import org.vstu.printed.persistence.user.User;
 import org.vstu.printed.dto.AuthenticationRequestDto;
-import org.vstu.printed.security.jwt.JwtTokenProvider;
 import org.vstu.printed.service.AuthenticationService;
 @RestController
 @RequestMapping("/login")

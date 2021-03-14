@@ -1,4 +1,4 @@
-package org.vstu.printed.controller;
+package org.vstu.printed.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.vstu.printed.dto.PrinterDto;
 import org.vstu.printed.service.printer.PrinterService;
 
-import javax.xml.ws.Response;
 import java.util.List;
 
 @RestController
